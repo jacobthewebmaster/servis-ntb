@@ -4,8 +4,23 @@ import Link from "next/link";
 import { useOrderStore } from "@/store/orderStore";
 
 export default function DopravaPage() {
+  
   const shipping = useOrderStore((s) => s.shipping);
   const setShipping = useOrderStore((s) => s.setShipping);
+  const problem = useOrderStore((s) => s.problem);
+
+if (!problem) {
+  return (
+    <main className="mx-auto max-w-4xl px-6 py-12">
+      <p className="text-slate-600">
+        Nejdříve prosím vyberte problém.
+      </p>
+      <Link href="/oprava/krok-1" className="underline">
+        Vybrat problém
+      </Link>
+    </main>
+  );
+}
 
   return (
     <main className="mx-auto max-w-5xl px-6 py-12">

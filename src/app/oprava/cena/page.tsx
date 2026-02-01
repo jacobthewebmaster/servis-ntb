@@ -9,15 +9,8 @@ export default function CenaPage() {
   if (!problem) {
     return (
       <main className="mx-auto max-w-4xl px-6 py-12">
-        <h1 className="text-2xl font-bold">Orientační cena opravy</h1>
-        <p className="mt-4 text-slate-600">
-          Nejprve prosím vyberte problém, ať vám můžeme zobrazit orientační cenu.
-        </p>
-
-        <Link
-          href="/oprava/krok-1"
-          className="mt-6 inline-block underline"
-        >
+        <p className="text-slate-600">Nejdříve prosím vyberte problém.</p>
+        <Link href="/oprava/krok-1" className="underline">
           Vybrat problém
         </Link>
       </main>
@@ -37,9 +30,7 @@ export default function CenaPage() {
         <div className="text-sm text-slate-600">Zvolený problém:</div>
         <div className="mt-1 text-lg font-semibold">{problem}</div>
 
-        <div className="mt-6 text-sm text-slate-600">
-          Typická cena opravy:
-        </div>
+        <div className="mt-6 text-sm text-slate-600">Typická cena opravy:</div>
         <div className="mt-1 text-2xl font-bold">— Kč</div>
 
         <div className="mt-6">

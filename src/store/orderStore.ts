@@ -19,15 +19,32 @@ type OrderState = {
   shipping: ShippingMethod;
   setShipping: (m: ShippingMethod) => void;
 
+  orderId: string | null;
+  ensureOrderId: () => void;
+
+  paid: boolean;
+  setPaid: (v: boolean) => void;
+
   reset: () => void;
 };
 
-export const useOrderStore = create<OrderState>((set) => ({
+export const useOrderStore = create<OrderState>((set, get) => ({
   problem: null,
   setProblem: (problem) => set({ problem }),
 
   shipping: null,
   setShipping: (shipping) => set({ shipping }),
 
-  reset: () => set({ problem: null, shipping: null }),
+  orderId: null,
+  ensureOrderId: () => {
+    if (!get().orderId) {
+      const id = "ORD-" + Date.now().toString(36).toUpperCase();
+      set({ orderId: id });
+    }
+  },
+
+  paid: false,
+  setPaid: (paid) => set({ paid }),
+
+  reset: () => set({ problem: null, shipping: null, orderId: null, paid: false }),
 }));
