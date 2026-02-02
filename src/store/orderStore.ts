@@ -12,6 +12,22 @@ export type ProblemKey =
 
 export type ShippingMethod = "zasilkovna" | "kuryr" | "osobne" | null;
 
+/** České názvy pro UI (aby se nikde neukázalo "liquid") */
+export const PROBLEM_LABELS: Record<ProblemKey, string> = {
+  lcd: "Prasklý / nefunkční displej",
+  charging: "Nenabíjí / problém s napájením",
+  wont_start: "Nejde zapnout",
+  overheating: "Přehřívá se / vypíná se",
+  slow: "Pomalý / seká se",
+  liquid: "Po polití / vlhkost",
+  software: "Problém se softwarem (Windows)",
+  other_mechanical: "Mechanické poškození",
+};
+
+export function getProblemLabel(key: ProblemKey | null) {
+  return key ? PROBLEM_LABELS[key] : "";
+}
+
 type OrderState = {
   problem: ProblemKey | null;
   setProblem: (p: ProblemKey) => void;
@@ -21,9 +37,6 @@ type OrderState = {
 
   orderId: string | null;
   ensureOrderId: () => void;
-
-  paid: boolean;
-  setPaid: (v: boolean) => void;
 
   reset: () => void;
 };
@@ -43,8 +56,5 @@ export const useOrderStore = create<OrderState>((set, get) => ({
     }
   },
 
-  paid: false,
-  setPaid: (paid) => set({ paid }),
-
-  reset: () => set({ problem: null, shipping: null, orderId: null, paid: false }),
+  reset: () => set({ problem: null, shipping: null, orderId: null }),
 }));

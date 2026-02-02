@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useOrderStore } from "@/store/orderStore";
+import { getProblemLabel } from "@/store/orderStore";
 import type { ProblemKey } from "@/store/orderStore";
 
 const PROBLEMS: { key: ProblemKey; title: string; desc: string }[] = [
@@ -56,7 +57,6 @@ export default function ProblemGrid() {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {PROBLEMS.map((p) => {
           const active = problem === p.key;
-
           return (
             <button
               key={p.key}
@@ -81,7 +81,6 @@ export default function ProblemGrid() {
         <div className="mt-1 text-sm text-slate-600">
           Nejste si jistí nebo máte kombinaci závad? Popište nám problém a domluvíme se konkrétně.
         </div>
-
         <div className="mt-4">
           <Link
             href="/oprava/kontakt"
@@ -94,14 +93,16 @@ export default function ProblemGrid() {
 
       {/* debug – klidně pak smaž */}
       <div className="text-sm text-slate-600">
-        Vybráno: <span className="font-semibold">{problem ?? "nic"}</span>
+        Vybráno:{" "}
+        <span className="font-semibold">
+          {problem ? getProblemLabel(problem) : "nic"}
+        </span>
       </div>
 
       <div className="flex items-center justify-between gap-4">
         <p className="text-sm text-slate-600">
           Pokud si nejste jistí, vyberte možnost, která je nejblíž vašemu problému.
         </p>
-
         <Link
           href={problem ? "/oprava/krok-2" : "#"}
           className={[
