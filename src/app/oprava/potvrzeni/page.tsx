@@ -2,57 +2,40 @@
 
 import Link from "next/link";
 import { useOrderStore } from "@/store/orderStore";
+import { getProblemLabel } from "@/store/orderStore";
 
 export default function PotvrzeniPage() {
-  const { problem, shipping, orderId, reset } = useOrderStore((s) => s);
-
-  if (!orderId || !problem || !shipping) {
-    return (
-      <main className="mx-auto max-w-4xl px-6 py-12">
-        <h1 className="text-3xl font-bold">Objednávka přijata</h1>
-        <p className="mt-4 text-slate-600">
-          Děkujeme. Detaily zakázky už nejsou dostupné (nebo jste stránku otevřel napřímo).
-        </p>
-        <Link
-          href="/"
-          className="mt-6 inline-flex items-center justify-center rounded-xl border px-6 py-3 font-semibold"
-        >
-          Zpět na úvod
-        </Link>
-      </main>
-    );
-  }
+  const { problem, name, email, phone, note, shipping } = useOrderStore();
 
   return (
     <main className="mx-auto max-w-4xl px-6 py-12">
       <h1 className="text-3xl font-bold">Objednávka přijata</h1>
 
-      <p className="mt-4 text-slate-600">
-        Děkujeme. Jakmile notebook dorazí, provedeme diagnostiku a ozveme se s přesnou cenou opravy.
+      <p className="mt-3 text-slate-600">
+        Děkujeme. Níže je shrnutí objednávky a informace, co bude následovat.
       </p>
 
-      <div className="mt-8 rounded-2xl border p-6 space-y-2">
-        <div>
-          <span className="text-slate-600">ID zakázky:</span>{" "}
-          <strong>{orderId}</strong>
-        </div>
-        <div>
-          <span className="text-slate-600">Problém:</span>{" "}
-          <strong>{problem}</strong>
-        </div>
-        <div>
-          <span className="text-slate-600">Doprava:</span>{" "}
-          <strong>{shipping}</strong>
-        </div>
+      <div className="mt-8 grid gap-4 rounded-2xl border p-6">
+        <div><strong>Problém:</strong> {problem ? getProblemLabel(problem) : "-"}</div>
+        <div><strong>Jméno:</strong> {name}</div>
+        <div><strong>E‑mail:</strong> {email}</div>
+        {phone && <div><strong>Telefon:</strong> {phone}</div>}
+        {note && <div><strong>Poznámka:</strong> {note}</div>}
+        <div><strong>Doprava:</strong> {shipping}</div>
+      </div>
+
+      <div className="mt-8 rounded-2xl border p-6">
+        <h2 className="font-semibold mb-2">Další kroky</h2>
+        <ul className="list-disc pl-5 text-slate-600 space-y-1">
+          <li>Notebook zašlete zvoleným způsobem dopravy.</li>
+          <li>Po diagnostice vás budeme kontaktovat s cenovou nabídkou.</li>
+          <li>Opravu provádíme vždy až po schválení ceny.</li>
+        </ul>
       </div>
 
       <div className="mt-8">
-        <Link
-          href="/"
-          onClick={() => reset()}
-          className="inline-flex items-center justify-center rounded-xl border px-6 py-3 font-semibold"
-        >
-          Zpět na úvod
+        <Link href="/" className="underline">
+          Zpět na úvodní stránku
         </Link>
       </div>
     </main>
