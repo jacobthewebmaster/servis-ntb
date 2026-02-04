@@ -4,33 +4,27 @@ import Link from "next/link";
 import { useOrderStore } from "@/store/orderStore";
 
 export default function DopravaPage() {
-  
   const shipping = useOrderStore((s) => s.shipping);
   const setShipping = useOrderStore((s) => s.setShipping);
   const problem = useOrderStore((s) => s.problem);
 
-if (!problem) {
-  return (
-    <main className="mx-auto max-w-4xl px-6 py-12">
-      <p className="text-slate-600">
-        Nejdříve prosím vyberte problém.
-      </p>
-      <Link href="/oprava/krok-1" className="underline">
-        Vybrat problém
-      </Link>
-    </main>
-  );
-}
+  if (!problem) {
+    return (
+      <main className="mx-auto max-w-4xl px-6 py-12">
+        <p className="text-slate-600">Nejdříve prosím vyberte problém.</p>
+        <Link href="/oprava/krok-1" className="underline">
+          Vybrat problém
+        </Link>
+      </main>
+    );
+  }
 
   return (
     <main className="mx-auto max-w-5xl px-6 py-12">
       <h1 className="text-3xl font-bold">Způsob doručení notebooku</h1>
-      <p className="mt-2 text-slate-600">
-        Vyberte, jakým způsobem nám notebook předáte.
-      </p>
+      <p className="mt-2 text-slate-600">Vyberte, jakým způsobem nám notebook předáte.</p>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-3">
-        {/* Zásilkovna */}
         <button
           type="button"
           onClick={() => setShipping("zasilkovna")}
@@ -47,7 +41,6 @@ if (!problem) {
           </div>
         </button>
 
-        {/* Kurýr */}
         <button
           type="button"
           onClick={() => setShipping("kuryr")}
@@ -64,7 +57,6 @@ if (!problem) {
           </div>
         </button>
 
-        {/* Osobně */}
         <button
           type="button"
           onClick={() => setShipping("osobne")}
@@ -82,10 +74,20 @@ if (!problem) {
         </button>
       </div>
 
-      {/* Debug – klidně pak smaž */}
+      {/* debug – klidně pak smaž */}
       <div className="mt-4 text-sm text-slate-600">
-        Vybraná doprava: <span className="font-semibold">{shipping ?? "nic"}</span>
-      </div>
+  Vybraná doprava:{" "}
+  <span className="font-semibold">
+    {shipping === "zasilkovna"
+      ? "Zásilkovna"
+      : shipping === "kuryr"
+      ? "Kurýr"
+      : shipping === "osobne"
+      ? "Osobně"
+      : "nic"}
+  </span>
+</div>
+
 
       <div className="mt-10 flex items-center justify-between">
         <Link href="/oprava/formular" className="underline text-slate-600">
@@ -93,13 +95,13 @@ if (!problem) {
         </Link>
 
         <Link
-          href={shipping ? "/oprava/platba" : "#"}
+          href={shipping ? "/oprava/potvrzeni" : "#"}
           className={[
             "inline-flex items-center justify-center rounded-xl border px-6 py-3 font-semibold",
             !shipping && "pointer-events-none opacity-50",
           ].join(" ")}
         >
-          Pokračovat k platbě
+          Pokračovat
         </Link>
       </div>
     </main>

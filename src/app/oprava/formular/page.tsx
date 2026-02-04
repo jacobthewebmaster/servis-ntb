@@ -131,7 +131,13 @@ export default function OrderFormPage() {
           </Link>
         </div>
       </form>
-
+      <div className="mt-8 border-t pt-4 text-sm text-slate-600">
+  Odesláním formuláře souhlasíte s{" "}
+  <Link href="/podminky" className="underline">
+    podmínkami služby
+  </Link>
+  .
+</div>
       <p className="mt-6 text-sm text-slate-600">
         Platba probíhá až po schválení ceny opravy. V případě nerealizování opravy
         může být účtován administrativní poplatek dle podmínek.

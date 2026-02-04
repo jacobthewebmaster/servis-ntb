@@ -52,3 +52,16 @@ export const useOrderStore = create<OrderState>((set) => ({
       shipping: null,
     }),
 }));
+export function getProblemLabel(p: ProblemKey | null) {
+  if (!p) return "";
+  return {
+    lcd: "Prasklý / nefunkční displej",
+    charging: "Nenabíjí / problém s napájením",
+    wont_start: "Nejde zapnout",
+    overheating: "Přehřívá se / vypíná se",
+    slow: "Pomalý / seká se",
+    liquid: "Po polití / vlhkost",
+    software: "Problém se softwarem",
+    other_mechanical: "Mechanické poškození",
+  }[p];
+}

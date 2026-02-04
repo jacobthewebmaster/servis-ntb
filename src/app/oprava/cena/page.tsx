@@ -7,6 +7,7 @@ import { getProblemLabel } from "@/store/orderStore";
 
 export default function CenaFormPage() {
   const problem = useOrderStore((s) => s.problem);
+
   const [loading, setLoading] = useState(false);
   const [ok, setOk] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
@@ -38,7 +39,7 @@ export default function CenaFormPage() {
     const form = new FormData(e.currentTarget);
 
     try {
-      const res = await fetch("/api/cena", {
+      const res = await fetch("/api/cena-form", {
         method: "POST",
         body: form,
       });
@@ -62,16 +63,21 @@ export default function CenaFormPage() {
   return (
     <main className="mx-auto max-w-6xl px-6 py-12">
       <h1 className="text-3xl font-bold">Orientační cena – poptávka</h1>
+
       <p className="mt-2 text-slate-600">
         Vybraný problém:{" "}
-        <span className="font-semibold">{getProblemLabel(problem)}</span>
+        <span className="font-semibold">
+          {getProblemLabel(problem)}
+        </span>
       </p>
 
       <div className="mt-8 rounded-2xl border p-6">
         <form onSubmit={onSubmit} className="grid gap-4">
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="grid gap-1">
-              <span className="text-sm text-slate-600">Iniciály / jméno</span>
+              <span className="text-sm text-slate-600">
+                Iniciály / jméno
+              </span>
               <input
                 name="name"
                 required
@@ -117,7 +123,9 @@ export default function CenaFormPage() {
           </div>
 
           <label className="grid gap-1">
-            <span className="text-sm text-slate-600">Krátký popis vady</span>
+            <span className="text-sm text-slate-600">
+              Krátký popis vady
+            </span>
             <textarea
               name="desc"
               required
@@ -177,6 +185,14 @@ export default function CenaFormPage() {
             </Link>
           </div>
 
+          <p className="mt-3 text-sm text-slate-600">
+            Odesláním souhlasíte s{" "}
+            <a className="underline" href="/podminky">
+              podmínkami služby
+            </a>
+            .
+          </p>
+
           {ok && (
             <div className="rounded-xl border border-green-200 bg-green-50 p-4 text-green-800">
               {ok}
@@ -190,6 +206,13 @@ export default function CenaFormPage() {
           )}
         </form>
       </div>
+            <div className="mt-8 border-t pt-4 text-sm text-slate-600">
+  Odesláním formuláře souhlasíte s{" "}
+  <Link href="/podminky" className="underline">
+    podmínkami služby
+  </Link>
+  .
+</div>
 
       <p className="mt-6 text-sm text-slate-600">
         Opravu provádíme vždy až po vašem schválení ceny. Pokud by oprava nebyla
