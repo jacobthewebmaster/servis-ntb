@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useOrderStore } from "@/store/orderStore";
 import { getProblemLabel } from "@/store/orderStore";
 import type { ProblemKey } from "@/store/orderStore";
@@ -46,22 +47,40 @@ const PROBLEMS: { key: ProblemKey; title: string; desc: string }[] = [
     title: "Mechanické poškození",
     desc: "Vylomené panty, prasklé šasi, ulomené části",
   },
+  {
+    key: "other",
+    title: "Jiný problém",
+    desc: "Popište závadu vlastními slovy",
+  },
 ];
 
 export default function ProblemGrid() {
   const problem = useOrderStore((s) => s.problem);
   const setProblem = useOrderStore((s) => s.setProblem);
+  const router = useRouter();
+
+  function handleClick(p: ProblemKey) {
+    if (p === "other") {
+      router.push("/kontakt"); // přesměrování na kontaktní formulář
+      return;
+    }
+
+    setProblem(p);
+    router.push("/oprava/krok-2");
+  }
 
   return (
     <div className="space-y-6">
+      {/* GRID PROBLÉMŮ */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {PROBLEMS.map((p) => {
           const active = problem === p.key;
+
           return (
             <button
               key={p.key}
               type="button"
-              onClick={() => setProblem(p.key)}
+              onClick={() => handleClick(p.key)}
               className={[
                 "text-left rounded-xl border p-5 transition",
                 active
@@ -76,22 +95,7 @@ export default function ProblemGrid() {
         })}
       </div>
 
-      <div className="rounded-2xl border p-6">
-        <div className="font-semibold">Jiný problém?</div>
-        <div className="mt-1 text-sm text-slate-600">
-          Nejste si jistí nebo máte kombinaci závad? Popište nám problém a domluvíme se konkrétně.
-        </div>
-        <div className="mt-4">
-          <Link
-            href="/oprava/kontakt"
-            className="inline-flex items-center justify-center rounded-xl border px-5 py-2 font-semibold"
-          >
-            Popsat problém
-          </Link>
-        </div>
-      </div>
-
-      {/* debug – klidně pak smaž */}
+      {/* DEBUG – můžeš později smazat */}
       <div className="text-sm text-slate-600">
         Vybráno:{" "}
         <span className="font-semibold">
@@ -99,10 +103,12 @@ export default function ProblemGrid() {
         </span>
       </div>
 
+      {/* POKRAČOVAT */}
       <div className="flex items-center justify-between gap-4">
         <p className="text-sm text-slate-600">
           Pokud si nejste jistí, vyberte možnost, která je nejblíž vašemu problému.
         </p>
+
         <Link
           href={problem ? "/oprava/krok-2" : "#"}
           className={[

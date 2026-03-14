@@ -8,7 +8,8 @@ export type ProblemKey =
   | "slow"
   | "liquid"
   | "software"
-  | "other_mechanical";
+  | "other_mechanical"
+  | "other";
 
 export type ShippingMethod = "zasilkovna" | "kuryr" | "osobne" | null;
 
@@ -21,7 +22,9 @@ type OrderState = {
   email: string;
   phone: string;
   note: string;
-  setContact: (v: Partial<Pick<OrderState, "name" | "email" | "phone" | "note">>) => void;
+  setContact: (
+    v: Partial<Pick<OrderState, "name" | "email" | "phone" | "note">>
+  ) => void;
 
   shipping: ShippingMethod;
   setShipping: (m: ShippingMethod) => void;
@@ -31,13 +34,22 @@ type OrderState = {
 
 export const useOrderStore = create<OrderState>((set) => ({
   problem: null,
-  setProblem: (problem) => set({ problem }),
+
+  setProblem: (problem) =>
+    set({
+      problem,
+    }),
 
   name: "",
   email: "",
   phone: "",
   note: "",
-  setContact: (v) => set(v),
+
+  setContact: (v) =>
+    set((state) => ({
+      ...state,
+      ...v,
+    })),
 
   shipping: null,
   setShipping: (shipping) => set({ shipping }),
@@ -52,9 +64,11 @@ export const useOrderStore = create<OrderState>((set) => ({
       shipping: null,
     }),
 }));
+
 export function getProblemLabel(p: ProblemKey | null) {
   if (!p) return "";
-  return {
+
+  const labels: Record<ProblemKey, string> = {
     lcd: "Prasklý / nefunkční displej",
     charging: "Nenabíjí / problém s napájením",
     wont_start: "Nejde zapnout",
@@ -63,5 +77,8 @@ export function getProblemLabel(p: ProblemKey | null) {
     liquid: "Po polití / vlhkost",
     software: "Problém se softwarem",
     other_mechanical: "Mechanické poškození",
-  }[p];
+    other: "Jiný problém",
+  };
+
+  return labels[p];
 }
