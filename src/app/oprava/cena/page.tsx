@@ -44,12 +44,14 @@ export default function CenaFormPage() {
         body: form,
       });
 
-      const data = await res.json().catch(() => ({}));
+      const data = await res.json().catch(() => null);
 
-      if (!res.ok) {
-        setErr(data?.error ?? "Nepodařilo se odeslat formulář.");
-        return;
-      }
+if (!res.ok || !data?.ok) {
+  setErr(data?.error ?? "Nepodařilo se odeslat formulář.");
+  return;
+}
+
+window.location.href = "/oprava/potvrzeni?typ=cena";
 
       setOk("Odesláno ✅ Potvrzení jsme poslali na e‑mail.");
       (e.currentTarget as HTMLFormElement).reset();
@@ -66,18 +68,14 @@ export default function CenaFormPage() {
 
       <p className="mt-2 text-slate-600">
         Vybraný problém:{" "}
-        <span className="font-semibold">
-          {getProblemLabel(problem)}
-        </span>
+        <span className="font-semibold">{getProblemLabel(problem)}</span>
       </p>
 
       <div className="mt-8 rounded-2xl border p-6">
         <form onSubmit={onSubmit} className="grid gap-4">
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="grid gap-1">
-              <span className="text-sm text-slate-600">
-                Iniciály / jméno
-              </span>
+              <span className="text-sm text-slate-600">Iniciály / jméno</span>
               <input
                 name="name"
                 required
@@ -101,6 +99,7 @@ export default function CenaFormPage() {
               <span className="text-sm text-slate-600">Telefon</span>
               <input
                 name="phone"
+                required
                 className="rounded-xl border px-4 py-3"
                 placeholder="+420…"
               />
@@ -123,9 +122,7 @@ export default function CenaFormPage() {
           </div>
 
           <label className="grid gap-1">
-            <span className="text-sm text-slate-600">
-              Krátký popis vady
-            </span>
+            <span className="text-sm text-slate-600">Krátký popis vady</span>
             <textarea
               name="desc"
               required
@@ -206,13 +203,6 @@ export default function CenaFormPage() {
           )}
         </form>
       </div>
-            <div className="mt-8 border-t pt-4 text-sm text-slate-600">
-  Odesláním formuláře souhlasíte s{" "}
-  <Link href="/podminky" className="underline">
-    podmínkami služby
-  </Link>
-  .
-</div>
 
       <p className="mt-6 text-sm text-slate-600">
         Opravu provádíme vždy až po vašem schválení ceny. Pokud by oprava nebyla

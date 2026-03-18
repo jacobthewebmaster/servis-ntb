@@ -22,7 +22,9 @@ export default function DopravaPage() {
   return (
     <main className="mx-auto max-w-5xl px-6 py-12">
       <h1 className="text-3xl font-bold">Způsob doručení notebooku</h1>
-      <p className="mt-2 text-slate-600">Vyberte, jakým způsobem nám notebook předáte.</p>
+      <p className="mt-2 text-slate-600">
+        Vyberte, jakým způsobem nám notebook předáte.
+      </p>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-3">
         <button
@@ -31,13 +33,13 @@ export default function DopravaPage() {
           className={[
             "rounded-2xl border p-6 text-left transition",
             shipping === "zasilkovna"
-              ? "bg-blue-50 border-blue-600 ring-2 ring-blue-600"
+              ? "border-blue-600 bg-blue-50 ring-2 ring-blue-600"
               : "hover:bg-slate-50",
           ].join(" ")}
         >
           <div className="font-semibold">Zásilkovna</div>
           <div className="mt-2 text-sm text-slate-600">
-            Nejrychlejší a doporučená varianta. Podací kód pošleme e‑mailem.
+            Nejrychlejší a doporučená varianta.
           </div>
         </button>
 
@@ -47,13 +49,13 @@ export default function DopravaPage() {
           className={[
             "rounded-2xl border p-6 text-left transition",
             shipping === "kuryr"
-              ? "bg-blue-50 border-blue-600 ring-2 ring-blue-600"
+              ? "border-blue-600 bg-blue-50 ring-2 ring-blue-600"
               : "hover:bg-slate-50",
           ].join(" ")}
         >
-          <div className="font-semibold">Kurýr</div>
+          <div className="font-semibold">Kurýr (DPD, PPL, ...)</div>
           <div className="mt-2 text-sm text-slate-600">
-            Notebook odešlete kurýrem dle vlastní volby (PPL, DPD apod.).
+            Notebook odešlete kurýrem dle vlastní volby.
           </div>
         </button>
 
@@ -63,7 +65,7 @@ export default function DopravaPage() {
           className={[
             "rounded-2xl border p-6 text-left transition",
             shipping === "osobne"
-              ? "bg-blue-50 border-blue-600 ring-2 ring-blue-600"
+              ? "border-blue-600 bg-blue-50 ring-2 ring-blue-600"
               : "hover:bg-slate-50",
           ].join(" ")}
         >
@@ -74,20 +76,18 @@ export default function DopravaPage() {
         </button>
       </div>
 
-      {/* debug – klidně pak smaž */}
       <div className="mt-4 text-sm text-slate-600">
-  Vybraná doprava:{" "}
-  <span className="font-semibold">
-    {shipping === "zasilkovna"
-      ? "Zásilkovna"
-      : shipping === "kuryr"
-      ? "Kurýr"
-      : shipping === "osobne"
-      ? "Osobně"
-      : "nic"}
-  </span>
-</div>
-
+        Vybraná doprava:{" "}
+        <span className="font-semibold">
+          {shipping === "zasilkovna"
+            ? "Zásilkovna"
+            : shipping === "kuryr"
+            ? "Kurýr"
+            : shipping === "osobne"
+            ? "Osobní předání"
+            : "nic"}
+        </span>
+      </div>
 
       <div className="mt-10 flex items-center justify-between">
         <Link href="/oprava/formular" className="underline text-slate-600">

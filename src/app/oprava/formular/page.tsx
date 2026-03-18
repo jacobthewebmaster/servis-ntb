@@ -27,20 +27,47 @@ export default function OrderFormPage() {
     );
   }
 
-  function submit(e: React.FormEvent) {
+  async function submit(e: React.FormEvent) {
     e.preventDefault();
     setErr(null);
 
-    if (!name || !email) {
-      setErr("Vyplňte prosím jméno a e‑mail.");
+    if (!name || !email || !phone) {
+      setErr("Vyplňte prosím jméno, e‑mail a telefon.");
       return;
     }
+
     if (!shipping) {
       setErr("Vyberte prosím způsob dopravy.");
       return;
     }
 
-    router.push("/oprava/potvrzeni");
+    try {
+      const res = await fetch("/api/order", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          phone,
+          note,
+          shipping,
+          problem,
+        }),
+      });
+
+      const data = await res.json().catch(() => null);
+
+      if (!res.ok || !data?.ok) {
+        setErr(data?.error || "Nepodařilo se odeslat objednávku.");
+        return;
+      }
+
+      router.push("/oprava/potvrzeni");
+    } catch {
+      setErr("Chyba připojení.");
+    }
   }
 
   return (
@@ -55,6 +82,7 @@ export default function OrderFormPage() {
           <label className="grid gap-1">
             <span className="text-sm text-slate-600">Jméno *</span>
             <input
+              required
               className="rounded-xl border px-4 py-3"
               value={name}
               onChange={(e) => setContact({ name: e.target.value })}
@@ -65,6 +93,7 @@ export default function OrderFormPage() {
             <span className="text-sm text-slate-600">E‑mail *</span>
             <input
               type="email"
+              required
               className="rounded-xl border px-4 py-3"
               value={email}
               onChange={(e) => setContact({ email: e.target.value })}
@@ -72,11 +101,13 @@ export default function OrderFormPage() {
           </label>
 
           <label className="grid gap-1">
-            <span className="text-sm text-slate-600">Telefon</span>
+            <span className="text-sm text-slate-600">Telefon *</span>
             <input
+              required
               className="rounded-xl border px-4 py-3"
               value={phone}
               onChange={(e) => setContact({ phone: e.target.value })}
+              placeholder="+420..."
             />
           </label>
         </div>
@@ -87,16 +118,16 @@ export default function OrderFormPage() {
             className="min-h-[100px] rounded-xl border px-4 py-3"
             value={note}
             onChange={(e) => setContact({ note: e.target.value })}
-            placeholder="Cokoliv důležitého (heslo, projevy závady, historie…) "
+            placeholder="Cokoliv důležitého (heslo, projevy závady, historie…)"
           />
         </label>
 
         <div>
-          <div className="font-semibold mb-2">Způsob dopravy *</div>
+          <div className="mb-2 font-semibold">Způsob dopravy *</div>
           <div className="grid gap-3 sm:grid-cols-3">
             {[
               { k: "zasilkovna", t: "Zásilkovna" },
-              { k: "kuryr", t: "Kurýr" },
+              { k: "kuryr", t: "Kurýr (DPD, PPL, ...)" },
               { k: "osobne", t: "Osobně" },
             ].map((m) => (
               <button
@@ -131,13 +162,15 @@ export default function OrderFormPage() {
           </Link>
         </div>
       </form>
+
       <div className="mt-8 border-t pt-4 text-sm text-slate-600">
-  Odesláním formuláře souhlasíte s{" "}
-  <Link href="/podminky" className="underline">
-    podmínkami služby
-  </Link>
-  .
-</div>
+        Odesláním formuláře souhlasíte s{" "}
+        <Link href="/podminky" className="underline">
+          podmínkami služby
+        </Link>
+        .
+      </div>
+
       <p className="mt-6 text-sm text-slate-600">
         Platba probíhá až po schválení ceny opravy. V případě nerealizování opravy
         může být účtován administrativní poplatek dle podmínek.

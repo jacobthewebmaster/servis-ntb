@@ -1,57 +1,89 @@
-import Link from "next/link";
-
-export default function Home() {
+export default function HomePage() {
   return (
-    <main className="mx-auto max-w-6xl px-6 py-14">
-      <section className="rounded-2xl border p-8">
-        <h1 className="text-4xl font-bold leading-tight">Oprava notebooku</h1>
+    <main className="mx-auto max-w-5xl px-6 py-12">
+      {/* HERO */}
+      <section>
+        <h1 className="text-3xl font-bold">Opravy notebooků po celé ČR</h1>
 
-        <p className="mt-4 max-w-2xl text-lg text-slate-700">
-          Nemáte v okolí žádný servis? Notebook si u vás vyzvedneme a po diagnostice
-          vám pošleme cenovou nabídku. Opravu provádíme vždy až po vašem schválení ceny.
+        <p className="mt-3 text-slate-600">
+          Diagnostika zdarma při realizaci opravy. Opravu provádíme až po
+          schválení ceny.
         </p>
 
-        <div className="mt-8">
-          <Link
+        <div className="mt-6">
+          <a
             href="/oprava/krok-1"
             className="inline-flex items-center justify-center rounded-xl border px-6 py-3 font-semibold"
           >
-            Začít opravu
-          </Link>
-        </div>
-
-        <div className="mt-10 grid gap-3 sm:grid-cols-3">
-          <div className="rounded-xl border p-4 text-sm">
-            <div className="font-semibold">Svoz NTB po celé ČR</div>
-            <div className="mt-1 text-slate-600">Zásilkovna / kurýr / osobně</div>
-          </div>
-
-          <div className="rounded-xl border p-4 text-sm">
-            <div className="font-semibold">Diagnostika do 24 hodin</div>
-            <div className="mt-1 text-slate-600">+ nacenění opravy</div>
-          </div>
-
-          <div className="rounded-xl border p-4 text-sm">
-            <div className="font-semibold">Cena vždy předem</div>
-            <div className="mt-1 text-slate-600">bez překvapení</div>
-          </div>
-
-          <div className="rounded-xl border p-4 text-sm">
-            <div className="font-semibold">Opravujeme všechny značky</div>
-            <div className="mt-1 text-slate-600">Lenovo, HP, Dell, Asus, Acer…</div>
-          </div>
-
-          <div className="rounded-xl border p-4 text-sm">
-            <div className="font-semibold">Profesionální přístup</div>
-            <div className="mt-1 text-slate-600">průběžně vás informujeme</div>
-          </div>
-
-          <div className="rounded-xl border p-4 text-sm">
-            <div className="font-semibold">1000+ spokojených zákazníků</div>
-            <div className="mt-1 text-slate-600">ověřené zkušenosti</div>
-          </div>
+            Zjistit orientační cenu
+          </a>
         </div>
       </section>
+
+      {/* JAK TO FUNGUJE */}
+      <section className="mt-12">
+        <h2 className="mb-4 text-xl font-semibold">Jak to funguje</h2>
+
+        <div className="grid gap-3 text-slate-600">
+          <div>1️⃣ Vyplníte formulář</div>
+          <div>2️⃣ Pošlete notebook</div>
+          <div>3️⃣ Provedeme diagnostiku</div>
+          <div>4️⃣ Po schválení provedeme opravu</div>
+        </div>
+      </section>
+
+      {/* DŮVĚRA */}
+      <section className="mt-12 rounded-2xl border p-6">
+        <div className="mb-2 font-semibold">Proč si vybrat nás</div>
+
+        <div className="space-y-1 text-slate-600">
+          <div>✔ Diagnostika zdarma při realizaci opravy</div>
+          <div>✔ Doprava k nám zdarma při realizaci opravy</div>
+          <div>✔ Opravu provádíme až po vašem schválení ceny</div>
+          <div>✔ Opravy po celé ČR</div>
+        </div>
+      </section>
+
+      {/* ORIENTAČNÍ CENY */}
+      <section className="mt-12 rounded-2xl border p-6">
+        <h2 className="mb-3 font-semibold">Orientační ceny</h2>
+
+        <div className="space-y-1 text-slate-600">
+          <div>Výměna displeje: 3000,-</div>
+          <div>Čištění chlazení + přepastování: 1200–1500,-</div>
+          <div>Oprava MB: 3000,-</div>
+        </div>
+      </section>
+
+      {/* ZNAČKY */}
+      <section className="mt-12">
+        <div className="mb-2 font-semibold">
+          ✔ Opravujeme notebooky všech značek
+        </div>
+
+        <div className="text-slate-600">
+          Lenovo • HP • Dell • Asus • Acer • MSI • a další značky
+        </div>
+
+        <div className="mt-2 text-sm text-slate-500">
+          Apple zařízení neopravujeme
+        </div>
+      </section>
+
+      {/* RYCHLOST */}
+      <section className="mt-8 text-sm text-slate-600">
+        Obvykle odpovídáme do 2 hodin v pracovní dny.
+      </section>
+
+      {/* STICKY BUTTON (mobil) */}
+      <div className="fixed bottom-4 left-4 right-4 sm:hidden">
+        <a
+          href="/oprava/krok-1"
+          className="block rounded-xl bg-black py-3 text-center font-semibold text-white"
+        >
+          🔧 Objednat opravu
+        </a>
+      </div>
     </main>
   );
 }

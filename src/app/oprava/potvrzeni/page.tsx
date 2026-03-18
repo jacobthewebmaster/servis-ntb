@@ -1,132 +1,68 @@
 "use client";
 
 import Link from "next/link";
-import { useOrderStore } from "@/store/orderStore";
-import { getProblemLabel } from "@/store/orderStore";
-
-/* ---------- helpers ---------- */
-
-function getShippingLabel(shipping: string | null) {
-  if (!shipping) return "-";
-  return (
-    {
-      zasilkovna: "Zásilkovna",
-      kuryr: "Kurýr",
-      osobne: "Osobně",
-    } as Record<string, string>
-  )[shipping] ?? shipping;
-}
-
-function getShippingInstructions(shipping: string | null) {
-  if (shipping === "zasilkovna") {
-    return (
-      <>
-        <p>
-          Notebook zabalte do pevné krabice a odneste na jakékoliv podací místo
-          Zásilkovny.
-        </p>
-        <p>
-          <strong>Podací kód vám pošleme e‑mailem</strong> po přijetí objednávky.
-        </p>
-      </>
-    );
-  }
-
-  if (shipping === "kuryr") {
-    return (
-      <>
-        <p>
-          Notebook odešlete kurýrem dle vlastní volby (PPL, DPD, GLS apod.).
-        </p>
-        <p>
-          Adresu a doporučení k zabalení vám zašleme e‑mailem.
-        </p>
-      </>
-    );
-  }
-
-  if (shipping === "osobne") {
-    return (
-      <>
-        <p>Osobní předání je možné po předchozí domluvě.</p>
-        <p>
-          <strong>Ozveme se vám e‑mailem nebo telefonicky</strong> a domluvíme
-          termín.
-        </p>
-      </>
-    );
-  }
-
-  return null;
-}
-
-/* ---------- page ---------- */
+import { useEffect } from "react";
+import { useOrderStore, getProblemLabel } from "@/store/orderStore";
 
 export default function PotvrzeniPage() {
-  const { problem, name, email, phone, note, shipping } = useOrderStore();
+  const problem = useOrderStore((s) => s.problem);
+  const shipping = useOrderStore((s) => s.shipping);
+  const reset = useOrderStore((s) => s.reset);
+
+  useEffect(() => {
+    return () => {
+      reset();
+    };
+  }, [reset]);
 
   return (
     <main className="mx-auto max-w-4xl px-6 py-12">
-      <h1 className="text-3xl font-bold">Objednávka přijata</h1>
+      <div className="rounded-2xl border p-8">
+        <h1 className="text-3xl font-bold">Děkujeme, objednávka byla odeslána</h1>
 
-      {/* UX status */}
-      <div className="mt-4 rounded-xl border border-green-200 bg-green-50 p-4 text-green-800">
-        Objednávka byla úspěšně odeslána.  
-        Další informace vám zašleme e‑mailem.
-      </div>
+        <p className="mt-3 text-slate-600">
+          Vaši poptávku jsme přijali a brzy se vám ozveme s dalším postupem.
+        </p>
 
-      <p className="mt-4 text-slate-600">
-        Níže je shrnutí objednávky a informace, co bude následovat.
-      </p>
+        <div className="mt-6 space-y-2 text-sm text-slate-700">
+          {problem && (
+            <div>
+              <span className="font-semibold">Problém:</span>{" "}
+              {getProblemLabel(problem)}
+            </div>
+          )}
 
-      {/* Shrnutí */}
-      <div className="mt-8 grid gap-4 rounded-2xl border p-6">
-        <div>
-          <strong>Problém:</strong>{" "}
-          {problem ? getProblemLabel(problem) : "-"}
+          {shipping && (
+            <div>
+              <span className="font-semibold">Doprava:</span>{" "}
+              {shipping === "zasilkovna"
+                ? "Zásilkovna"
+                : shipping === "kuryr"
+                ? "Kurýr"
+                : "Osobní předání"}
+            </div>
+          )}
         </div>
-        <div>
-          <strong>Jméno:</strong> {name || "-"}
-        </div>
-        <div>
-          <strong>E‑mail:</strong> {email || "-"}
-        </div>
-        {phone && (
-          <div>
-            <strong>Telefon:</strong> {phone}
-          </div>
-        )}
-        {note && (
-          <div>
-            <strong>Poznámka:</strong> {note}
-          </div>
-        )}
-        <div>
-          <strong>Doprava:</strong> {getShippingLabel(shipping)}
-        </div>
-      </div>
 
-      {/* Další kroky */}
-      <div className="mt-8 rounded-2xl border p-6">
-        <h2 className="mb-3 font-semibold">Jak postupovat dál</h2>
-
-        <div className="space-y-3 text-slate-600">
-          {getShippingInstructions(shipping)}
-
-          <p>
-            Po přijetí notebooku provedeme diagnostiku a ozveme se vám s cenovou
-            nabídkou.
-          </p>
-          <p>
-            <strong>Opravu provádíme vždy až po schválení ceny.</strong>
-          </p>
+        <div className="mt-8 rounded-xl bg-slate-50 p-4 text-sm text-slate-600">
+          Opravu provádíme vždy až po vašem schválení ceny. Diagnostika je zdarma při realizaci opravy.
         </div>
-      </div>
 
-      <div className="mt-8">
-        <Link href="/" className="underline">
-          Zpět na úvodní stránku
-        </Link>
+        <div className="mt-8 flex flex-wrap gap-3">
+          <Link
+            href="/"
+            className="rounded-xl border px-6 py-3 font-semibold"
+          >
+            Zpět na hlavní stránku
+          </Link>
+
+          <Link
+            href="/oprava/krok-1"
+            className="rounded-xl border px-6 py-3 font-semibold"
+          >
+            Nová poptávka
+          </Link>
+        </div>
       </div>
     </main>
   );
