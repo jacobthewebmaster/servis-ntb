@@ -64,7 +64,7 @@ export default function OrderFormPage() {
         return;
       }
 
-      router.push("/oprava/potvrzeni");
+      router.push("/oprava/potvrzeni?typ=objednavka");
     } catch {
       setErr("Chyba připojení.");
     }
