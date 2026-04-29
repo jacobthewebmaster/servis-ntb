@@ -1,16 +1,8 @@
-import Link from "next/link";
 import ProblemGrid from "@/components/oprava/ProblemGrid";
 
 export default function Krok1Page() {
   return (
     <main className="mx-auto max-w-5xl px-6 py-12">
-      <Link
-        href="/"
-        className="inline-flex items-center gap-2 text-sm text-slate-600 hover:text-slate-900 mb-8 transition-colors"
-      >
-        ← Zpět na hlavní stránku
-      </Link>
-
       <h1 className="text-3xl font-bold">S čím má notebook problém?</h1>
 
       <p className="mt-2 text-slate-600">

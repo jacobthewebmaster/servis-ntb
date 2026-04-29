@@ -1,0 +1,150 @@
+"use client";
+
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useOrderStore } from "@/store/orderStore";
+import { getProblemLabel } from "@/store/orderStore";
+import { useState } from "react";
+
+export default function OrderFormPage() {
+  const router = useRouter();
+  const problem = useOrderStore((s) => s.problem);
+  const { name, email, phone, note, setContact } = useOrderStore();
+  const [err, setErr] = useState<string | null>(null);
+
+  if (!problem) {
+    return (
+      <main className="mx-auto max-w-6xl px-6 py-12">
+        <h1 className="text-3xl font-bold">Nejdříve vyberte problém</h1>
+        <Link href="/oprava/krok-1" className="underline">
+          Vybrat problém
+        </Link>
+      </main>
+    );
+  }
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    setErr(null);
+
+    if (!name || !email || !phone) {
+      setErr("Vyplňte prosím jméno, e‑mail a telefon.");
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/order", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          phone,
+          note,
+          problem,
+        }),
+      });
+
+      const data = await res.json().catch(() => null);
+
+      if (!res.ok || !data?.ok) {
+        setErr(data?.error || "Nepodařilo se odeslat objednávku.");
+        return;
+      }
+
+      router.push("/oprava/potvrzeni?typ=objednavka");
+    } catch {
+      setErr("Chyba připojení.");
+    }
+  }
+
+  return (
+    <main className="mx-auto max-w-6xl px-6 py-12">
+      <h1 className="text-3xl font-bold">Objednávka opravy</h1>
+
+      <p className="mt-2 text-slate-600">
+        Problém: <span className="font-semibold">{getProblemLabel(problem)}</span>
+      </p>
+
+      <form onSubmit={submit} className="mt-8 grid gap-6">
+        <div className="grid gap-4 sm:grid-cols-2">
+          <label className="grid gap-1">
+            <span className="text-sm text-slate-600">Jméno *</span>
+            <input
+              required
+              className="rounded-xl border px-4 py-3"
+              value={name}
+              onChange={(e) => setContact({ name: e.target.value })}
+            />
+          </label>
+
+          <label className="grid gap-1">
+            <span className="text-sm text-slate-600">E‑mail *</span>
+            <input
+              type="email"
+              required
+              className="rounded-xl border px-4 py-3"
+              value={email}
+              onChange={(e) => setContact({ email: e.target.value })}
+            />
+          </label>
+
+          <label className="grid gap-1">
+            <span className="text-sm text-slate-600">Telefon *</span>
+            <input
+              required
+              className="rounded-xl border px-4 py-3"
+              value={phone}
+              onChange={(e) => setContact({ phone: e.target.value })}
+              placeholder="+420..."
+            />
+          </label>
+        </div>
+
+        <label className="grid gap-1">
+          <span className="text-sm text-slate-600">Poznámka k opravě</span>
+          <textarea
+            className="min-h-[100px] rounded-xl border px-4 py-3"
+            value={note}
+            onChange={(e) => setContact({ note: e.target.value })}
+            placeholder="Cokoliv důležitého (heslo, projevy závady, historie…)"
+          />
+        </label>
+
+        {err && (
+          <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-red-800">
+            {err}
+          </div>
+        )}
+
+        <div className="flex items-center gap-3">
+          <button
+            type="submit"
+            className="rounded-xl border px-6 py-3 font-semibold"
+          >
+            Odeslat objednávku
+          </button>
+
+          <Link href="/oprava/krok-2" className="underline text-slate-600">
+            Zpět
+          </Link>
+        </div>
+      </form>
+
+      <div className="mt-8 border-t pt-4 text-sm text-slate-600">
+        Odesláním formuláře souhlasíte s{" "}
+        <Link href="/podminky" className="underline">
+          podmínkami služby
+        </Link>
+        .
+      </div>
+
+      <p className="mt-6 text-sm text-slate-600">
+        Platba probíhá až po schválení ceny opravy. V případě nerealizování opravy
+        může být účtován administrativní poplatek dle podmínek.
+      </p>
+    </main>
+  );
+}

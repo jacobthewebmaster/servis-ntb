@@ -2,17 +2,17 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #020617;
-  --primary: #020617;
+  --foreground: #0f172a;
+  --primary: #0284c7;
   --primary-foreground: #ffffff;
-  --secondary: #f8fafc;
-  --secondary-foreground: #020617;
-  --muted: #f1f5f9;
+  --secondary: #f1f5f9;
+  --secondary-foreground: #0f172a;
+  --muted: #e2e8f0;
   --muted-foreground: #64748b;
-  --accent: #f8fafc;
+  --accent: #0ea5e9;
   --border: #e2e8f0;
-  --ring: #94a3b8;
-  --radius: 0.75rem;
+  --ring: #0284c7;
+  --radius: 0.5rem;
 }
 
 @theme inline {
@@ -31,18 +31,7 @@
   --font-mono: var(--font-geist-mono);
 }
 
-* {
-  border-color: var(--border);
-}
-
-html,
 body {
-  min-height: 100%;
-}
-
-body {
-  background:
-    radial-gradient(circle at top left, #dbeafe, transparent 40%),
-    radial-gradient(circle at bottom right, #bae6fd, transparent 40%),
-    linear-gradient(to bottom, #ffffff, #f1f5f9) !important;
+  background: var(--background);
+  color: var(--foreground);
 }

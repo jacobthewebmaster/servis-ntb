@@ -13,9 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Opravy notebooků rychle a bez starostí",
-  description:
-    "Servis a opravy notebooků. Diagnostika zdarma při realizaci opravy, oprava až po schválení ceny.",
+  title: "Servis NTB - Opravy notebooku a pocitacu",
+  description: "Profesionalni servis notebooku a pocitacu. Rychle a spolehlive opravy, reinstalace Windows, vymena dilu, zachrana dat.",
 };
 
 export default function RootLayout({
@@ -25,9 +24,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="cs">
-<body className="text-slate-950 antialiased">
-  {children}
-</body>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        {children}
+      </body>
     </html>
   );
 }
