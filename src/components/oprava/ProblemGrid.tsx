@@ -7,7 +7,7 @@ import type { ProblemKey } from "@/store/orderStore";
 const PROBLEMS: { key: ProblemKey; icon: string; title: string; desc: string }[] = [
   { key: "lcd", icon: "💻", title: "Prasklý / nefunkční displej", desc: "Prasklé sklo, čáry, černá obrazovka" },
   { key: "charging", icon: "🔌", title: "Nenabíjí / problém s napájením", desc: "Nenabíjí se, vypadává konektor, baterie" },
-  { key: "wont_start", icon: "⏻", title: "Nejde zapnout", desc: "Notebook nereaguje, nesvítí, nic se neděje" },
+  { key: "wont_start", icon: "⚡", title: "Nejde zapnout", desc: "Notebook nereaguje, nesvítí, nic se neděje" },
   { key: "overheating", icon: "🌡️", title: "Přehřívá se / vypíná se", desc: "Hlučný ventilátor, vysoká teplota" },
   { key: "slow", icon: "🐢", title: "Pomalý / seká se", desc: "Dlouhé načítání, zamrzání" },
   { key: "liquid", icon: "💧", title: "Po polití / vlhkost", desc: "Voda, káva, čaj apod." },

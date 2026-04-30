@@ -379,12 +379,11 @@ export default function OrderFormPage() {
 
         <aside className="lg:col-span-2">
           <div className="rounded-3xl border bg-slate-50 p-6">
-            <h2 className="font-semibold">Proč chceme stav zařízení?</h2>
+            <h2 className="font-semibold">Proč chceme znát stav zařízení?</h2>
             <div className="mt-6 space-y-3 text-sm text-slate-700">
-              <div>✔ Lepší evidence notebooku</div>
+              <div>✔ Lepší evidence notebooků</div>
               <div>✔ Méně nedorozumění při převzetí</div>
               <div>✔ Ochrana zákazníka i servisu</div>
-              <div>✔ Oprava až po schválení ceny</div>
             </div>
           </div>
 
@@ -395,10 +394,10 @@ export default function OrderFormPage() {
             </p>
 
             <a
-              href="tel:+420608711223"
+              href="tel:+420774506503"
               className="mt-4 inline-flex rounded-xl bg-black px-5 py-3 text-sm font-semibold text-white hover:bg-black/90"
             >
-              608 711 223
+              774 506 503
             </a>
           </div>
 

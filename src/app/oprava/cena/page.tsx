@@ -107,7 +107,7 @@ export default function CenaFormPage() {
             </p>
 
             <div className="mt-5 flex flex-wrap gap-3 text-sm text-slate-600">
-              <span>✔ Odpověď do 24 hodin</span>
+              <span>✔ Odpověď běžně do 24 hodin</span>
               <span>✔ Nezávazně</span>
               <span>✔ Bez platby předem</span>
             </div>
@@ -304,9 +304,9 @@ export default function CenaFormPage() {
             <h2 className="font-semibold">Jak nacenění funguje</h2>
             <div className="mt-6 space-y-3 text-sm text-slate-700">
               <div>✔ Odpovíme obvykle do 24 hodin</div>
-              <div>✔ Oprava až po schválení ceny</div>
               <div>✔ Neplatíte nic předem</div>
-              <div>✔ V případě dotazu volejte 608 711 223</div>
+              <div>✔ Pokud budete mít o opravu zájem, pošleme Vám instrukce k zaslání NTB</div>
+              <div>✔ V případě dotazu volejte 774 506 503</div>
             </div>
           </div>
         </aside>
