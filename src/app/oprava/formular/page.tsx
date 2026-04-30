@@ -14,15 +14,16 @@ export default function OrderFormPage() {
   const { name, email, phone, note, setContact } = useOrderStore();
 
   const [device, setDevice] = useState("");
-  const [condition, setCondition] = useState("");
-  const [conditionNote, setConditionNote] = useState("");
-  const [err, setErr] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+const [condition, setCondition] = useState("");
+const [conditionNote, setConditionNote] = useState("");
+const [err, setErr] = useState<string | null>(null);
+const [loading, setLoading] = useState(false);
 
-  const [photoClosedPreview, setPhotoClosedPreview] = useState<string | null>(null);
-  const [photoClosedName, setPhotoClosedName] = useState<string | null>(null);
-  const [photoOpenPreview, setPhotoOpenPreview] = useState<string | null>(null);
-  const [photoOpenName, setPhotoOpenName] = useState<string | null>(null);
+const [photoClosedPreview, setPhotoClosedPreview] = useState<string | null>(null);
+const [photoClosedName, setPhotoClosedName] = useState<string | null>(null);
+const [photoOpenPreview, setPhotoOpenPreview] = useState<string | null>(null);
+const [photoOpenName, setPhotoOpenName] = useState<string | null>(null);
+const [gdpr, setGdpr] = useState(false);
 
   function handleFile(file: File | undefined, type: "closed" | "open") {
     if (!file) return;
@@ -79,10 +80,16 @@ export default function OrderFormPage() {
     setLoading(true);
 
     if (!name || !email || !phone || !device || !condition) {
-      setErr("Vyplňte prosím jméno, e-mail, telefon, značku/model a stav zařízení.");
-      setLoading(false);
-      return;
-    }
+  setErr("Vyplňte prosím jméno, e-mail, telefon, značku/model a stav zařízení.");
+  setLoading(false);
+  return;
+}
+
+if (!gdpr) {
+  setErr("Musíte souhlasit se zpracováním osobních údajů.");
+  setLoading(false);
+  return;
+}
 
     const form = new FormData(e.currentTarget);
     form.append("problem", selectedProblem);
@@ -352,13 +359,27 @@ export default function OrderFormPage() {
                 />
               </label>
 
-              <div className="rounded-2xl border bg-slate-50 p-5 text-sm text-slate-700">
-                Odesláním potvrzujete, že uvedené informace odpovídají skutečnému stavu zařízení a souhlasíte s{" "}
-                <Link href="/podminky" className="underline">
-                  podmínkami služby
-                </Link>
-                .
-              </div>
+              <label className="flex cursor-pointer gap-3 rounded-2xl border border-blue-100 bg-blue-50 p-5 text-sm text-slate-700">
+  <input
+    type="checkbox"
+    name="gdpr"
+    checked={gdpr}
+    onChange={(e) => setGdpr(e.target.checked)}
+    className="mt-1 h-4 w-4 accent-blue-700"
+  />
+
+  <span>
+    Souhlasím se zpracováním osobních údajů pro účely vyřízení objednávky a potvrzuji, že uvedené informace odpovídají skutečnému stavu zařízení.{" "}
+    <Link href="/ochrana-osobnich-udaju" className="font-semibold text-blue-800 underline">
+      Ochrana osobních údajů
+    </Link>{" "}
+    a{" "}
+    <Link href="/podminky" className="font-semibold text-blue-800 underline">
+      podmínky služby
+    </Link>
+    .
+  </span>
+</label>
 
               {err && (
                 <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-red-800">
@@ -369,7 +390,7 @@ export default function OrderFormPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="rounded-xl bg-black px-6 py-3 font-semibold text-white hover:bg-black/90 disabled:opacity-60"
+                className="rounded-xl bg-red-700 px-6 py-3 font-semibold text-white shadow-lg shadow-red-300 transition hover:bg-red-800 disabled:opacity-60"
               >
                 {loading ? "Odesílám…" : "Odeslat objednávku"}
               </button>
@@ -395,7 +416,7 @@ export default function OrderFormPage() {
 
             <a
               href="tel:+420774506503"
-              className="mt-4 inline-flex rounded-xl bg-black px-5 py-3 text-sm font-semibold text-white hover:bg-black/90"
+              className="mt-4 inline-flex rounded-xl bg-blue-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-800"
             >
               774 506 503
             </a>

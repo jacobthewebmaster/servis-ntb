@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import CookieBar from "@/components/CookieBar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,9 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Opravy notebooků rychle a bez starostí",
+  title: "HV notebooky.cz – Opravy notebooků",
   description:
-    "Servis a opravy notebooků. Diagnostika zdarma při realizaci opravy, oprava až po schválení ceny.",
+    "Rychlé opravy notebooků bez starostí. Diagnostika zdarma při realizaci opravy.",
 };
 
 export default function RootLayout({
@@ -25,9 +26,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="cs">
-<body className="text-slate-950 antialiased">
-  {children}
-</body>
+      <body className="text-slate-950 antialiased">
+        {children}
+        <CookieBar />
+      </body>
     </html>
   );
 }
