@@ -16,19 +16,18 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Opravy notebooků | HVnotebooky.cz",
   description:
-    "Rychlé opravy notebooků po celé ČR. Diagnostika zdarma při realizaci opravy. Oprava až po schválení ceny.",
+    "Rychlé opravy notebooků bez starostí. Diagnostika zdarma při realizaci opravy.",
 
   openGraph: {
-    title: "Opravy notebooků | HVnotebooky.cz",
-    description:
-      "Rychlé opravy notebooků bez starostí. Diagnostika zdarma.",
+    title: "HV notebooky.cz – Opravy notebooků",
+    description: "Rychlé opravy notebooků bez starostí.",
     url: "https://www.hvnotebooky.cz",
     siteName: "HVnotebooky.cz",
     locale: "cs_CZ",
     type: "website",
     images: [
       {
-        url: "/og.png", // dej si sem obrázek (1200x630)
+        url: "https://www.hvnotebooky.cz/og.png", // 🔥 důležité – full URL
         width: 1200,
         height: 630,
       },
