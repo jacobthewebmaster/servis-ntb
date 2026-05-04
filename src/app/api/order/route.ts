@@ -24,14 +24,13 @@ async function fileToAttachment(file: File | null, filename: string) {
 
   return {
     filename: file.name || filename,
-    content: buffer,
+    content: buffer.toString("base64"),
   };
 }
 
 export async function POST(req: Request) {
   try {
     if (!process.env.RESEND_API_KEY) {
-      console.error("Missing RESEND_API_KEY");
       return NextResponse.json(
         { ok: false, error: "Missing RESEND_API_KEY" },
         { status: 500 }
@@ -39,7 +38,6 @@ export async function POST(req: Request) {
     }
 
     if (!process.env.MAIL_FROM || !process.env.MAIL_TO) {
-      console.error("Missing MAIL_FROM or MAIL_TO");
       return NextResponse.json(
         { ok: false, error: "Missing MAIL_FROM or MAIL_TO" },
         { status: 500 }
@@ -77,10 +75,7 @@ export async function POST(req: Request) {
         fileToAttachment(photoClosed, "fotka-zavreny.jpg"),
         fileToAttachment(photoOpen, "fotka-otevreny.jpg"),
       ])
-    ).filter(Boolean) as {
-      filename: string;
-      content: Buffer;
-    }[];
+    ).filter(Boolean) as { filename: string; content: string }[];
 
     const internalResult = await resend.emails.send({
       from: process.env.MAIL_FROM,
@@ -91,21 +86,16 @@ export async function POST(req: Request) {
       html: `
         <h2>Nová objednávka opravy</h2>
         <hr />
-
         <p><strong>ID:</strong> ${orderId}</p>
         <p><strong>Jméno:</strong> ${name}</p>
         <p><strong>Email:</strong> ${email}</p>
         <p><strong>Telefon:</strong> ${phone}</p>
         <p><strong>Problém:</strong> ${problemLabel}</p>
-
         <hr />
-
         <p><strong>Zařízení:</strong> ${device || "-"}</p>
         <p><strong>Stav:</strong> ${condition || "-"}</p>
         <p><strong>Popis stavu:</strong> ${conditionNote || "-"}</p>
-
         <hr />
-
         <p><strong>Poznámka:</strong> ${note || "-"}</p>
         <p><strong>Fotky:</strong> ${attachments.length ? "Ano" : "Ne"}</p>
       `,
@@ -114,7 +104,12 @@ export async function POST(req: Request) {
     if (internalResult.error) {
       console.error("INTERNAL MAIL ERROR:", internalResult.error);
       return NextResponse.json(
-        { ok: false, error: internalResult.error },
+        {
+          ok: false,
+          error:
+            internalResult.error.message ||
+            "Chyba při odesílání interního e-mailu.",
+        },
         { status: 500 }
       );
     }
@@ -126,23 +121,14 @@ export async function POST(req: Request) {
       html: `
         <h2>Děkujeme za objednávku opravy</h2>
         <hr />
-
         <p>Dobrý den, ${name},</p>
-
         <p>Objednávku jsme přijali a brzy se vám ozveme.</p>
-
         <p><strong>ID zakázky:</strong> ${orderId}</p>
         <p><strong>Problém:</strong> ${problemLabel}</p>
         <p><strong>Zařízení:</strong> ${device || "-"}</p>
-
         <hr />
-
         <h3>📦 Jak poslat notebook</h3>
-
-        <p>
-          Notebook dobře zabalte a přiložte jméno, telefon a ID zakázky.
-        </p>
-
+        <p>Notebook dobře zabalte a přiložte jméno, telefon a ID zakázky.</p>
         <ul>
           <li>
             <strong>Adresa:</strong><br />
@@ -162,9 +148,7 @@ export async function POST(req: Request) {
             ✉️ ntbservis@hvshop.cz
           </li>
         </ul>
-
         <hr />
-
         <p>S pozdravem<br /><strong>HVservis</strong></p>
       `,
     });
@@ -172,7 +156,12 @@ export async function POST(req: Request) {
     if (customerResult.error) {
       console.error("CUSTOMER MAIL ERROR:", customerResult.error);
       return NextResponse.json(
-        { ok: false, error: customerResult.error },
+        {
+          ok: false,
+          error:
+            customerResult.error.message ||
+            "Chyba při odesílání potvrzovacího e-mailu.",
+        },
         { status: 500 }
       );
     }
