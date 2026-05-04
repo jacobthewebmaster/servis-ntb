@@ -1,4 +1,5 @@
 "use client";
+
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useOrderStore } from "@/store/orderStore";
@@ -7,26 +8,26 @@ const services = [
   {
     key: "lcd",
     icon: "🖥️",
-    title: "Výměna displeje",
-    text: "Prasklé nebo nefunkční displeje vyměníme rychle a spolehlivě.",
+    title: "Výměna displeje notebooku",
+    text: "Prasklý nebo nefunkční displej notebooku vyměníme rychle a spolehlivě.",
   },
   {
     key: "charging",
     icon: "🔌",
     title: "Oprava napájení / USB‑C",
-    text: "Řešíme nenabíjení, vadné konektory a problémy s napájením.",
+    text: "Řešíme nenabíjení notebooku, vadné konektory a problémy s napájením.",
   },
   {
     key: "overheating",
     icon: "🌡️",
-    title: "Čištění chlazení",
-    text: "Vyčistíme chlazení, přepastujeme a snížíme teploty notebooku.",
+    title: "Čištění chlazení notebooku",
+    text: "Vyčistíme chlazení, přepastujeme procesor a snížíme teploty notebooku.",
   },
   {
     key: "other_mechanical",
     icon: "⚙️",
-    title: "Oprava základní desky",
-    text: "Diagnostika a opravy závad na desce podle rozsahu poškození.",
+    title: "Oprava základní desky notebooku",
+    text: "Provádíme diagnostiku a opravy závad na základní desce notebooku.",
   },
 ];
 
@@ -43,20 +44,20 @@ export default function HomePage() {
     <main className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-white text-slate-950">
       <header className="sticky top-0 z-50 border-b border-blue-100 bg-white/85 backdrop-blur">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-<div className="flex items-center text-base font-bold leading-none">
-  <div className="flex overflow-hidden rounded-md">
-    <span className="bg-blue-600 px-3 py-1.5 text-white font-black">
-      HV
-    </span>
-    <span className="bg-green-600 px-4 py-1.5 text-white font-bold">
-      notebooky
-    </span>
-  </div>
+          <div className="flex items-center text-base font-bold leading-none">
+            <div className="flex overflow-hidden rounded-md">
+              <span className="bg-blue-600 px-3 py-1.5 font-black text-white">
+                HV
+              </span>
+              <span className="bg-green-600 px-4 py-1.5 font-bold text-white">
+                notebooky
+              </span>
+            </div>
 
-  <span className="ml-1 text-base font-bold text-slate-700">
-    .cz
-  </span>
-</div>
+            <span className="ml-1 text-base font-bold text-slate-700">
+              .cz
+            </span>
+          </div>
 
           <div className="text-right">
             <a
@@ -77,7 +78,7 @@ export default function HomePage() {
 
       <section className="mx-auto max-w-5xl px-6 py-20 text-center">
         <div className="mx-auto mb-6 inline-flex rounded-full border border-blue-200 bg-blue-100 px-4 py-2 text-sm font-medium text-blue-800 shadow-sm">
-          Servis notebooků všech běžných značek
+          Servis notebooků po celé ČR
         </div>
 
         <h1 className="mx-auto max-w-3xl text-4xl font-black tracking-tight md:text-5xl">
@@ -85,7 +86,9 @@ export default function HomePage() {
         </h1>
 
         <p className="mx-auto mt-5 max-w-2xl text-lg text-slate-600">
-          Diagnostika zdarma při realizaci opravy. Opravu provádíme až po vašem schválení ceny.
+          Provádíme servis a opravy notebooků běžných značek jako Lenovo, HP,
+          Dell, Asus, Acer a další. Diagnostika zdarma při realizaci opravy.
+          Opravujeme až po vašem schválení ceny.
         </p>
 
         <div className="mt-8">
@@ -96,6 +99,10 @@ export default function HomePage() {
             🚀 Začít opravu
           </Link>
         </div>
+
+        <p className="mt-4 text-sm text-slate-500">
+          ✔ Nezávazně • ✔ Odpověď do 24 hodin • ✔ Oprava až po schválení ceny
+        </p>
       </section>
 
       <section className="border-y border-blue-100 bg-white/70 backdrop-blur">
@@ -105,7 +112,10 @@ export default function HomePage() {
             ["Oprava až po schválení", "Nejdřív vám řekneme cenu, opravujeme až po souhlasu."],
             ["Doprava zpět zdarma", "Při realizaci opravy posíláme notebook zpět zdarma."],
           ].map(([title, text]) => (
-            <div key={title} className="rounded-2xl border border-blue-100 bg-white p-5 shadow-sm">
+            <div
+              key={title}
+              className="rounded-2xl border border-blue-100 bg-white p-5 shadow-sm"
+            >
               <h3 className="font-bold text-blue-800">{title}</h3>
               <p className="mt-2 text-sm text-slate-600">{text}</p>
             </div>
@@ -115,9 +125,11 @@ export default function HomePage() {
 
       <section className="mx-auto max-w-5xl px-6 py-16">
         <div className="text-center">
-          <h2 className="text-3xl font-black tracking-tight">Naše služby</h2>
+          <h2 className="text-3xl font-black tracking-tight">
+            Nejčastější opravy notebooků
+          </h2>
           <p className="mt-3 text-slate-600">
-            Klikněte na problém a pokračujte v objednávce.
+            Vyberte problém s notebookem a pokračujte v objednávce opravy.
           </p>
         </div>
 
@@ -148,9 +160,10 @@ export default function HomePage() {
             </div>
 
             <div>
-              <h3 className="font-bold">Jiný problém</h3>
+              <h3 className="font-bold">Jiný problém s notebookem</h3>
               <p className="mt-2 text-sm text-slate-600">
-                Nejste si jistí? Vyberte problém z kompletního seznamu.
+                Nejste si jistí závadou? Vyberte problém z kompletního seznamu
+                a popište nám, co notebook dělá.
               </p>
             </div>
           </Link>
@@ -163,14 +176,16 @@ export default function HomePage() {
 
       <section className="border-y border-blue-100 bg-blue-50/80 backdrop-blur">
         <div className="mx-auto max-w-6xl px-6 py-16 text-center">
-          <h2 className="text-3xl font-black tracking-tight">Jak to funguje</h2>
+          <h2 className="text-3xl font-black tracking-tight">
+            Jak probíhá oprava notebooku?
+          </h2>
 
           <p className="mt-3 text-slate-600">
             Jednoduchý proces od objednávky po opravený notebook.
           </p>
 
           <div className="relative mt-16">
-            <div className="absolute left-0 right-0 top-8 hidden h-px bg-blue-300 lg:block z-0" />
+            <div className="absolute left-0 right-0 top-8 z-0 hidden h-px bg-blue-300 lg:block" />
 
             <div className="relative z-10 grid gap-10 lg:grid-cols-4">
               {[
@@ -198,8 +213,14 @@ export default function HomePage() {
       <section className="mx-auto max-w-5xl px-6 py-16">
         <div className="rounded-3xl border border-blue-100 bg-white p-8 text-center shadow-sm">
           <h2 className="text-3xl font-black tracking-tight">
-            Proč nám notebook svěřit?
+            Servis notebooků pro zákazníky z celé České republiky
           </h2>
+
+          <p className="mx-auto mt-4 max-w-3xl text-slate-600">
+            Notebook nám můžete zaslat přes dopravce. Po přijetí zařízení
+            provedeme diagnostiku, sdělíme vám cenu opravy a do opravy se
+            pustíme až po vašem potvrzení.
+          </p>
 
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
             {[
@@ -219,13 +240,49 @@ export default function HomePage() {
         </div>
       </section>
 
+      <section className="border-y border-blue-100 bg-blue-50/80">
+        <div className="mx-auto max-w-5xl px-6 py-16">
+          <h2 className="text-center text-3xl font-black tracking-tight">
+            Časté dotazy k opravě notebooku
+          </h2>
+
+          <div className="mt-10 grid gap-4">
+            {[
+              [
+                "Kolik stojí oprava notebooku?",
+                "Cena záleží na typu závady a modelu notebooku. Nejprve provedeme diagnostiku a cenu vám sdělíme před opravou.",
+              ],
+              [
+                "Platím něco předem?",
+                "Ne. Opravu provádíme až po vašem schválení ceny.",
+              ],
+              [
+                "Jak rychle se ozvete?",
+                "Po odeslání formuláře se vám ozveme obvykle do 24 hodin.",
+              ],
+              [
+                "Opravujete všechny značky notebooků?",
+                "Opravujeme běžné značky jako Lenovo, HP, Dell, Asus, Acer a další. Apple zařízení neopravujeme.",
+              ],
+            ].map(([q, a]) => (
+              <div key={q} className="rounded-2xl border border-blue-100 bg-white p-5">
+                <h3 className="font-bold text-blue-900">{q}</h3>
+                <p className="mt-2 text-sm text-slate-600">{a}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="mx-auto max-w-5xl px-6 py-16 text-center">
         <h2 className="text-3xl font-black tracking-tight">
-          Připraveni vám pomoci
+          Potřebujete opravit notebook?
         </h2>
 
         <p className="mx-auto mt-4 max-w-2xl text-slate-600">
-          Nevíte si rady? Vyplňte krátký formulář a my se vám ozveme s dalším postupem.
+          Vyplňte krátký formulář a my se vám ozveme s dalším postupem.
+          Pomůžeme s výměnou displeje, opravou napájení, čištěním chlazení i
+          diagnostikou závady.
         </p>
 
         <Link
@@ -235,6 +292,24 @@ export default function HomePage() {
           Začít opravu →
         </Link>
       </section>
+
+      <footer className="border-t border-blue-100 bg-white">
+        <div className="mx-auto max-w-5xl px-6 py-8 text-center text-sm text-slate-500">
+          <p className="font-semibold text-slate-700">
+            HVnotebooky.cz – servis a opravy notebooků
+          </p>
+          <p className="mt-2">
+            Telefon:{" "}
+            <a href="tel:+420774506503" className="font-semibold text-blue-700 underline">
+              774 506 503
+            </a>{" "}
+            • E-mail:{" "}
+            <a href="mailto:ntbservis@hvshop.cz" className="font-semibold text-blue-700 underline">
+              ntbservis@hvshop.cz
+            </a>
+          </p>
+        </div>
+      </footer>
     </main>
   );
 }
