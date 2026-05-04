@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 
+export const runtime = "nodejs";
+
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 const problemLabels: Record<string, string> = {
@@ -28,6 +30,22 @@ async function fileToAttachment(file: File | null, filename: string) {
 
 export async function POST(req: Request) {
   try {
+    if (!process.env.RESEND_API_KEY) {
+      console.error("Missing RESEND_API_KEY");
+      return NextResponse.json(
+        { ok: false, error: "Missing RESEND_API_KEY" },
+        { status: 500 }
+      );
+    }
+
+    if (!process.env.MAIL_FROM || !process.env.MAIL_TO) {
+      console.error("Missing MAIL_FROM or MAIL_TO");
+      return NextResponse.json(
+        { ok: false, error: "Missing MAIL_FROM or MAIL_TO" },
+        { status: 500 }
+      );
+    }
+
     const form = await req.formData();
 
     const orderId =
@@ -45,6 +63,13 @@ export async function POST(req: Request) {
     const photoClosed = form.get("photoClosed") as File | null;
     const photoOpen = form.get("photoOpen") as File | null;
 
+    if (!name || !email || !phone) {
+      return NextResponse.json(
+        { ok: false, error: "Chybí jméno, e-mail nebo telefon." },
+        { status: 400 }
+      );
+    }
+
     const problemLabel = problemLabels[problem] || problem || "-";
 
     const attachments = (
@@ -52,12 +77,14 @@ export async function POST(req: Request) {
         fileToAttachment(photoClosed, "fotka-zavreny.jpg"),
         fileToAttachment(photoOpen, "fotka-otevreny.jpg"),
       ])
-    ).filter(Boolean) as any[];
+    ).filter(Boolean) as {
+      filename: string;
+      content: Buffer;
+    }[];
 
-    // 🔧 INTERNÍ MAIL
     const internalResult = await resend.emails.send({
-      from: process.env.MAIL_FROM!,
-      to: process.env.MAIL_TO!,
+      from: process.env.MAIL_FROM,
+      to: process.env.MAIL_TO,
       replyTo: email,
       subject: `🔧 OBJEDNÁVKA – ${orderId} – ${name}`,
       attachments,
@@ -73,26 +100,27 @@ export async function POST(req: Request) {
 
         <hr />
 
-        <p><strong>Zařízení:</strong> ${device}</p>
-        <p><strong>Stav:</strong> ${condition}</p>
+        <p><strong>Zařízení:</strong> ${device || "-"}</p>
+        <p><strong>Stav:</strong> ${condition || "-"}</p>
         <p><strong>Popis stavu:</strong> ${conditionNote || "-"}</p>
 
         <hr />
 
         <p><strong>Poznámka:</strong> ${note || "-"}</p>
-        <p><strong>Fotky:</strong> ${
-          attachments.length ? "Ano" : "Ne"
-        }</p>
+        <p><strong>Fotky:</strong> ${attachments.length ? "Ano" : "Ne"}</p>
       `,
     });
 
-    if ((internalResult as any)?.error) {
-      return NextResponse.json({ ok: false }, { status: 500 });
+    if (internalResult.error) {
+      console.error("INTERNAL MAIL ERROR:", internalResult.error);
+      return NextResponse.json(
+        { ok: false, error: internalResult.error },
+        { status: 500 }
+      );
     }
 
-    // 📩 MAIL ZÁKAZNÍKOVI
     const customerResult = await resend.emails.send({
-      from: process.env.MAIL_FROM!,
+      from: process.env.MAIL_FROM,
       to: email,
       subject: `Potvrdili jsme objednávku ${orderId}`,
       html: `
@@ -101,11 +129,11 @@ export async function POST(req: Request) {
 
         <p>Dobrý den, ${name},</p>
 
-        <p>objednávku jsme přijali a brzy se vám ozveme.</p>
+        <p>Objednávku jsme přijali a brzy se vám ozveme.</p>
 
         <p><strong>ID zakázky:</strong> ${orderId}</p>
         <p><strong>Problém:</strong> ${problemLabel}</p>
-        <p><strong>Zařízení:</strong> ${device}</p>
+        <p><strong>Zařízení:</strong> ${device || "-"}</p>
 
         <hr />
 
@@ -116,24 +144,24 @@ export async function POST(req: Request) {
         </p>
 
         <ul>
-  <li>
-    <strong>Adresa:</strong><br />
-    HVservis<br />
-    Hybešova 11<br />
-    602 00 Brno<br />
-    📞 +420 774 506 503<br />
-    ✉️ ntbservis@hvshop.cz
-  </li>
-  <br />
-  <li>
-    <strong>Zásilkovna / PPL (Candystore):</strong><br />
-    Candystore<br />
-    Hybešova 11<br />
-    602 00 Brno<br />
-    📞 +420 774 506 503<br />
-    ✉️ ntbservis@hvshop.cz
-  </li>
-</ul>
+          <li>
+            <strong>Adresa:</strong><br />
+            HVservis<br />
+            Hybešova 11<br />
+            602 00 Brno<br />
+            📞 +420 774 506 503<br />
+            ✉️ ntbservis@hvshop.cz
+          </li>
+          <br />
+          <li>
+            <strong>Zásilkovna / PPL (Candystore):</strong><br />
+            Candystore<br />
+            Hybešova 11<br />
+            602 00 Brno<br />
+            📞 +420 774 506 503<br />
+            ✉️ ntbservis@hvshop.cz
+          </li>
+        </ul>
 
         <hr />
 
@@ -141,13 +169,21 @@ export async function POST(req: Request) {
       `,
     });
 
-    if ((customerResult as any)?.error) {
-      return NextResponse.json({ ok: false }, { status: 500 });
+    if (customerResult.error) {
+      console.error("CUSTOMER MAIL ERROR:", customerResult.error);
+      return NextResponse.json(
+        { ok: false, error: customerResult.error },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json({ ok: true, orderId });
   } catch (error) {
     console.error("ORDER API ERROR:", error);
-    return NextResponse.json({ ok: false }, { status: 500 });
+
+    return NextResponse.json(
+      { ok: false, error: "Nepodařilo se odeslat objednávku." },
+      { status: 500 }
+    );
   }
 }
