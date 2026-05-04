@@ -115,7 +115,7 @@ export async function POST(req: Request) {
           </li>
         </ul>
 
-        <p>Co nejdříve se vám ozveme s cenou a instrukcemi k odeslání.</p>
+        <p>Co nejdříve se vám ozveme s instrukcemi k odeslání.</p>
 
         <hr />
         <p>S pozdravem<br /><strong>HVservis</strong></p>
