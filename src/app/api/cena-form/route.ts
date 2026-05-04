@@ -8,7 +8,6 @@ export async function POST(req: Request) {
   try {
     const formData = await req.formData();
 
-    // Získání dat
     const name = String(formData.get("name") || "").trim();
     const email = String(formData.get("email") || "").trim();
     const phone = String(formData.get("phone") || "").trim();
@@ -16,77 +15,59 @@ export async function POST(req: Request) {
     const desc = String(formData.get("desc") || "").trim();
     const sn = String(formData.get("sn") || "").trim();
     const pn = String(formData.get("pn") || "").trim();
-    const problemKey = String(formData.get("problemKey") || "");
     const problemLabel = String(formData.get("problemLabel") || "");
 
-    // === VALIDACE ===
     if (!name || !email || !phone || !brand || !desc || !sn) {
-      return NextResponse.json(
-        { ok: false, error: "Vyplňte prosím všechny povinné údaje." },
-        { status: 400 }
-      );
+      return NextResponse.json({ ok: false, error: "Chybí povinné údaje." }, { status: 400 });
     }
 
-    const attachment = formData.get("attachment") as File | null;
-
-    // Interní email pro tebe (servis)
-    await resend.emails.send({
+    // Interní email
+    const internalResult = await resend.emails.send({
       from: process.env.MAIL_FROM!,
       to: process.env.MAIL_TO!,
       replyTo: email,
-      subject: `💰 Nová poptávka ceny – ${name}`,
+      subject: `💰 Poptávka ceny – ${name}`,
       html: `
         <h2>Nová poptávka orientační ceny</h2>
         <p><strong>Jméno:</strong> ${name}</p>
-        <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
-        <p><strong>Telefon:</strong> <a href="tel:${phone}">${phone}</a></p>
-        <p><strong>Značka / model:</strong> ${brand}</p>
-        <p><strong>Problém:</strong> ${problemLabel} (${problemKey})</p>
-        <p><strong>Popis:</strong></p>
-        <p>${desc}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Telefon:</strong> ${phone}</p>
+        <p><strong>Značka:</strong> ${brand}</p>
+        <p><strong>Problém:</strong> ${problemLabel}</p>
+        <p><strong>Popis:</strong> ${desc}</p>
         <p><strong>SN:</strong> ${sn}</p>
-        <p><strong>PN / Model:</strong> ${pn || "—"}</p>
-        ${attachment ? `<p><strong>Příloha:</strong> Ano (${attachment.name})</p>` : ""}
-        <hr />
-        <p><em>Zákazník čeká na cenovou nabídku.</em></p>
+        <p><strong>PN:</strong> ${pn || "-"}</p>
       `,
     });
 
-    // Potvrzovací email pro zákazníka
-    await resend.emails.send({
+    if (internalResult.error) {
+      console.error("Resend internal error:", internalResult.error);
+      return NextResponse.json({ ok: false, error: "Chyba při odesílání interního mailu." }, { status: 500 });
+    }
+
+    // Potvrzovací email zákazníkovi
+    const customerResult = await resend.emails.send({
       from: process.env.MAIL_FROM!,
       to: email,
-      subject: "✅ Přijali jsme vaši poptávku ceny – HV Notebooky",
+      subject: "✅ Přijali jsme vaši poptávku ceny",
       html: `
         <h2>Děkujeme, ${name}!</h2>
-        <p>Vaše poptávka orientační ceny byla úspěšně přijata.</p>
-        
-        <p><strong>Co teď?</strong></p>
-        <ul>
-          <li>Ozveme se vám s cenovou nabídkou obvykle do 24 hodin.</li>
-          <li>Pokud budeme potřebovat doplnit informace, kontaktujeme vás.</li>
-        </ul>
-
-        <p><strong>Shrnutí vaší poptávky:</strong></p>
-        <p><strong>Značka:</strong> ${brand}<br />
-           <strong>Problém:</strong> ${problemLabel}</p>
-
+        <p>Vaše poptávka byla přijata. Ozveme se vám s cenou do 24 hodin.</p>
+        <p><strong>Problém:</strong> ${problemLabel}</p>
         <hr />
-        <p>
-          S pozdravem<br />
-          <strong>HV Notebooky</strong><br />
-          <a href="tel:+420774506503">774 506 503</a>
-        </p>
+        <p>S pozdravem<br /><strong>HV Notebooky</strong></p>
       `,
     });
+
+    if (customerResult.error) {
+      console.error("Resend customer error:", customerResult.error);
+      return NextResponse.json({ ok: false, error: "Chyba při odesílání potvrzovacího mailu." }, { status: 500 });
+    }
 
     return NextResponse.json({ ok: true });
 
   } catch (error) {
-    console.error("API /api/cena-form error:", error);
-    return NextResponse.json(
-      { ok: false, error: "Nepodařilo se odeslat poptávku. Zkuste to prosím znovu." },
-      { status: 500 }
-    );
+    console.error("API error:", error);
+    return NextResponse.json({ ok: false, error: "Nepodařilo se zpracovat požadavek." }, { status: 500 });
   }
 }

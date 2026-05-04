@@ -2,9 +2,9 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export const runtime = "nodejs";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const problemLabels: Record<string, string> = {
   lcd: "Prasklý / nefunkční displej",
@@ -66,7 +66,7 @@ export async function POST(req: Request) {
     ).filter(Boolean) as { filename: string; content: string }[];
 
     // 1. Interní email pro servis
-    await resend.emails.send({
+    const internalResult = await resend.emails.send({
       from: process.env.MAIL_FROM!,
       to: process.env.MAIL_TO!,
       replyTo: email,
@@ -90,8 +90,16 @@ export async function POST(req: Request) {
       `,
     });
 
+    if (internalResult.error) {
+      console.error("Resend internal error:", internalResult.error);
+      return NextResponse.json(
+        { ok: false, error: "Chyba při odesílání interního e-mailu." },
+        { status: 500 }
+      );
+    }
+
     // 2. Potvrzovací email pro zákazníka
-    await resend.emails.send({
+    const customerResult = await resend.emails.send({
       from: process.env.MAIL_FROM!,
       to: email,
       subject: `✅ Objednávka přijata – ${orderId}`,
@@ -108,7 +116,7 @@ export async function POST(req: Request) {
         <ul>
           <li>Dobře zabalte notebook (bublinková fólie + pevná krabice)</li>
           <li>Přiložte nabíječku</li>
-          <li>Použijte Zásilkovnu / PPL / Českou poštu</li>
+          <li>Použijte Zásilkovnu, PPL nebo Českou poštu</li>
         </ul>
 
         <p>Co nejdříve se vám ozveme s cenou a instrukcemi k odeslání.</p>
@@ -121,6 +129,14 @@ export async function POST(req: Request) {
         </p>
       `,
     });
+
+    if (customerResult.error) {
+      console.error("Resend customer error:", customerResult.error);
+      return NextResponse.json(
+        { ok: false, error: "Chyba při odesílání potvrzovacího e-mailu." },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({ ok: true, orderId });
 
