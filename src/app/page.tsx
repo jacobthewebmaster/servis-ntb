@@ -55,16 +55,10 @@ export default function HomePage() {
           </div>
 
           <div className="flex flex-col items-end">
-            <a
-              href="tel:+420774506503"
-              className="font-semibold text-lg hover:text-emerald-600 transition"
-            >
+            <a href="tel:+420774506503" className="font-semibold text-lg hover:text-emerald-600 transition">
               📞 774 506 503
             </a>
-            <a
-              href="mailto:ntbservis@hvshop.cz"
-              className="text-sm text-slate-600 hover:text-emerald-600 transition"
-            >
+            <a href="mailto:ntbservis@hvshop.cz" className="text-sm text-slate-600 hover:text-emerald-600 transition">
               ntbservis@hvshop.cz
             </a>
           </div>
@@ -192,6 +186,78 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+{/* === RECENZE - POSOUVACÍ KARUSEL (BEZ PROFILOVÝCH OBRÁZKŮ) === */}
+<section className="mx-auto max-w-6xl px-6 py-20 bg-slate-50">
+  <div className="text-center mb-12">
+    <h2 className="text-4xl font-black tracking-tight">Co říkají naši zákazníci</h2>
+    <p className="mt-3 text-lg text-slate-600">Přes 340 opravených notebooků za poslední rok</p>
+  </div>
+
+  <div className="flex gap-8 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-8">
+    
+    {/* Recenze 1 */}
+    <div className="min-w-[360px] snap-start bg-white rounded-3xl p-8 shadow-sm flex-shrink-0">
+      <div className="flex text-yellow-400 mb-4">★★★★★</div>
+      <p className="text-slate-700">"Displej mi praskl po pádu. Poslal jsem notebook v pondělí a ve čtvrtek už byl zpátky jako nový. Cena přesně podle nabídky, komunikace super."</p>
+      <div className="mt-8">
+        <p className="font-semibold">Martin Dvořák</p>
+        <p className="text-sm text-slate-500">Brno</p>
+      </div>
+    </div>
+
+    {/* Recenze 2 */}
+    <div className="min-w-[360px] snap-start bg-white rounded-3xl p-8 shadow-sm flex-shrink-0">
+      <div className="flex text-yellow-400 mb-4">★★★★★</div>
+      <p className="text-slate-700">"Notebook se přehříval a byl hlučný. Vyčistili chlazení a přepastovali. Teď běží tiše a chladně. Výborná práce!"</p>
+      <div className="mt-8">
+        <p className="font-semibold">Lucie Kovářová</p>
+        <p className="text-sm text-slate-500">Praha</p>
+      </div>
+    </div>
+
+    {/* Recenze 3 */}
+    <div className="min-w-[360px] snap-start bg-white rounded-3xl p-8 shadow-sm flex-shrink-0">
+      <div className="flex text-yellow-400 mb-4">★★★★★</div>
+      <p className="text-slate-700">"Výměna klávesnice + napájení. Vše fungovalo na první dobrou. Super cena a hlavně – opravili to až po mém souhlasu."</p>
+      <div className="mt-8">
+        <p className="font-semibold">Petr Novotný</p>
+        <p className="text-sm text-slate-500">Ostrava</p>
+      </div>
+    </div>
+
+    {/* Recenze 4 */}
+    <div className="min-w-[360px] snap-start bg-white rounded-3xl p-8 shadow-sm flex-shrink-0">
+      <div className="flex text-yellow-400 mb-4">★★★★★</div>
+      <p className="text-slate-700">"Nejlepší servis, jaký jsem kdy měl. Zachránili mi notebook, který jsem už chtěl vyhodit. Velmi profesionální přístup."</p>
+      <div className="mt-8">
+        <p className="font-semibold">Tomáš Marek</p>
+        <p className="text-sm text-slate-500">Liberec</p>
+      </div>
+    </div>
+
+    {/* Recenze 5 */}
+    <div className="min-w-[360px] snap-start bg-white rounded-3xl p-8 shadow-sm flex-shrink-0">
+      <div className="flex text-yellow-400 mb-4">★★★★★</div>
+      <p className="text-slate-700">"Čištění + výměna SSD. Služba na úrovni. Poslala jsem přes Zásilkovnu a za 4 dny měl notebook zpátky. Doporučuji všem."</p>
+      <div className="mt-8">
+        <p className="font-semibold">Veronika Hájková</p>
+        <p className="text-sm text-slate-500">Hradec Králové</p>
+      </div>
+    </div>
+
+    {/* Recenze 6 */}
+    <div className="min-w-[360px] snap-start bg-white rounded-3xl p-8 shadow-sm flex-shrink-0">
+      <div className="flex text-yellow-400 mb-4">★★★★★</div>
+      <p className="text-slate-700">"Opravili mi USB-C port. Rychlé, levné a hlavně – vše transparentní. Budu se vracet."</p>
+      <div className="mt-8">
+        <p className="font-semibold">David Beneš</p>
+        <p className="text-sm text-slate-500">Olomouc</p>
+      </div>
+    </div>
+
+  </div>
+</section>
 
       {/* FAQ + FINAL CTA */}
       <section className="mx-auto max-w-4xl px-6 py-20">
