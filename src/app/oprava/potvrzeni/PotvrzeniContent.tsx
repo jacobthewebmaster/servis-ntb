@@ -56,7 +56,7 @@ export default function PotvrzeniContent() {
           <p className="mx-auto mt-8 max-w-xl text-lg text-slate-600">
             {isCena
               ? "Děkujeme! Ozveme se vám s orientační cenou opravy obvykle do 24 hodin na e-mail nebo telefon."
-              : "Děkujeme! Co nejdříve vám pošleme e-mail s instrukcemi k zaslání notebooku a s cenou opravy."}
+              : "Děkujeme! Co nejdříve vám pošleme e-mail s instrukcemi k zaslání notebooku."}
           </p>
 
           {problemLabel && (
