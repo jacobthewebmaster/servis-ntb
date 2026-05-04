@@ -1,3 +1,4 @@
+// src/app/api/cena-form/route.ts
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 
@@ -7,90 +8,84 @@ export async function POST(req: Request) {
   try {
     const formData = await req.formData();
 
-    const name = String(formData.get("name") || "");
-    const email = String(formData.get("email") || "");
-    const phone = String(formData.get("phone") || "");
-    const brand = String(formData.get("brand") || "");
-    const desc = String(formData.get("desc") || "");
-    const sn = String(formData.get("sn") || "");
-    const pn = String(formData.get("pn") || "");
+    // Získání dat
+    const name = String(formData.get("name") || "").trim();
+    const email = String(formData.get("email") || "").trim();
+    const phone = String(formData.get("phone") || "").trim();
+    const brand = String(formData.get("brand") || "").trim();
+    const desc = String(formData.get("desc") || "").trim();
+    const sn = String(formData.get("sn") || "").trim();
+    const pn = String(formData.get("pn") || "").trim();
     const problemKey = String(formData.get("problemKey") || "");
     const problemLabel = String(formData.get("problemLabel") || "");
 
-    const internalResult = await resend.emails.send({
+    // === VALIDACE ===
+    if (!name || !email || !phone || !brand || !desc || !sn) {
+      return NextResponse.json(
+        { ok: false, error: "Vyplňte prosím všechny povinné údaje." },
+        { status: 400 }
+      );
+    }
+
+    const attachment = formData.get("attachment") as File | null;
+
+    // Interní email pro tebe (servis)
+    await resend.emails.send({
       from: process.env.MAIL_FROM!,
       to: process.env.MAIL_TO!,
       replyTo: email,
-      subject: `💰 Poptávka ceny – ${name}`,
+      subject: `💰 Nová poptávka ceny – ${name}`,
       html: `
         <h2>Nová poptávka orientační ceny</h2>
-        <hr />
-
         <p><strong>Jméno:</strong> ${name}</p>
-        <p><strong>E-mail:</strong> <a href="mailto:${email}">${email}</a></p>
+        <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
         <p><strong>Telefon:</strong> <a href="tel:${phone}">${phone}</a></p>
-        <p><strong>Značka:</strong> ${brand}</p>
+        <p><strong>Značka / model:</strong> ${brand}</p>
         <p><strong>Problém:</strong> ${problemLabel} (${problemKey})</p>
-        <p><strong>Popis vady:</strong> ${desc}</p>
+        <p><strong>Popis:</strong></p>
+        <p>${desc}</p>
         <p><strong>SN:</strong> ${sn}</p>
-        <p><strong>PN / Model:</strong> ${pn || "-"}</p>
-
+        <p><strong>PN / Model:</strong> ${pn || "—"}</p>
+        ${attachment ? `<p><strong>Příloha:</strong> Ano (${attachment.name})</p>` : ""}
         <hr />
-        <p>Zákazník očekává orientační cenovou nabídku.</p>
+        <p><em>Zákazník čeká na cenovou nabídku.</em></p>
       `,
     });
 
-    if ((internalResult as any)?.error) {
-      return NextResponse.json(
-        { ok: false, error: "Chyba odeslání interního e-mailu." },
-        { status: 500 }
-      );
-    }
-
-    const customerResult = await resend.emails.send({
+    // Potvrzovací email pro zákazníka
+    await resend.emails.send({
       from: process.env.MAIL_FROM!,
       to: email,
-      subject: "Potvrdili jsme přijetí poptávky orientační ceny",
+      subject: "✅ Přijali jsme vaši poptávku ceny – HV Notebooky",
       html: `
-        <h2>Děkujeme za poptávku</h2>
-        <hr />
+        <h2>Děkujeme, ${name}!</h2>
+        <p>Vaše poptávka orientační ceny byla úspěšně přijata.</p>
+        
+        <p><strong>Co teď?</strong></p>
+        <ul>
+          <li>Ozveme se vám s cenovou nabídkou obvykle do 24 hodin.</li>
+          <li>Pokud budeme potřebovat doplnit informace, kontaktujeme vás.</li>
+        </ul>
 
-        <p>Dobrý den, ${name},</p>
-
-        <p>
-          děkujeme za zaslání poptávky orientační ceny. Vaši žádost jsme přijali
-          a co nejdříve se vám ozveme s odhadem ceny.
-        </p>
-
-        <p><strong>Značka:</strong> ${brand}</p>
-        <p><strong>Nahlášený problém:</strong> ${problemLabel}</p>
-
-        <p>
-          Pokud budeme potřebovat doplnit informace, ozveme se vám na tento e-mail
-          nebo telefon.
-        </p>
+        <p><strong>Shrnutí vaší poptávky:</strong></p>
+        <p><strong>Značka:</strong> ${brand}<br />
+           <strong>Problém:</strong> ${problemLabel}</p>
 
         <hr />
-
         <p>
           S pozdravem<br />
-          <strong>HVservis</strong>
+          <strong>HV Notebooky</strong><br />
+          <a href="tel:+420774506503">774 506 503</a>
         </p>
       `,
     });
 
-    if ((customerResult as any)?.error) {
-      return NextResponse.json(
-        { ok: false, error: "Chyba odeslání e-mailu zákazníkovi." },
-        { status: 500 }
-      );
-    }
-
     return NextResponse.json({ ok: true });
+
   } catch (error) {
     console.error("API /api/cena-form error:", error);
     return NextResponse.json(
-      { ok: false, error: "Nepodařilo se zpracovat formulář." },
+      { ok: false, error: "Nepodařilo se odeslat poptávku. Zkuste to prosím znovu." },
       { status: 500 }
     );
   }

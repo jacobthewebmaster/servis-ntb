@@ -1,3 +1,4 @@
+// src/app/oprava/cena/page.tsx
 "use client";
 
 import { useState } from "react";
@@ -5,7 +6,7 @@ import Link from "next/link";
 import { useOrderStore, getProblemLabel } from "@/store/orderStore";
 
 const inputClass =
-  "rounded-xl border bg-white px-4 py-3 outline-none transition focus:border-black focus:ring-2 focus:ring-black/10";
+  "w-full rounded-2xl border border-slate-200 bg-white px-5 py-3.5 outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-200";
 
 export default function CenaFormPage() {
   const problem = useOrderStore((s) => s.problem);
@@ -30,26 +31,23 @@ export default function CenaFormPage() {
   function removeAttachment() {
     setAttachmentName(null);
     setAttachmentPreview(null);
-
     const input = document.querySelector<HTMLInputElement>('input[name="attachment"]');
     if (input) input.value = "";
   }
 
   if (!problem) {
     return (
-      <main className="mx-auto max-w-2xl px-6 py-12">
-        <div className="rounded-3xl border bg-white p-8">
-          <h1 className="text-3xl font-bold tracking-tight">
-            Nejdříve vyberte problém
-          </h1>
-          <p className="mt-3 text-slate-600">
-            Pro nacenění potřebujeme vědět, s čím má notebook problém.
+      <main className="min-h-screen bg-slate-50 flex items-center justify-center px-6">
+        <div className="max-w-md text-center">
+          <h1 className="text-3xl font-bold">Nejdříve vyberte problém</h1>
+          <p className="mt-4 text-slate-600">
+            Pro nacenění potřebujeme vědět, s čím má váš notebook problém.
           </p>
           <Link
             href="/oprava/krok-1"
-            className="mt-6 inline-flex rounded-xl bg-black px-6 py-3 font-semibold text-white"
+            className="mt-8 inline-flex rounded-2xl bg-red-600 px-8 py-4 font-semibold text-white hover:bg-red-700 transition"
           >
-            Vybrat problém
+            ← Vybrat problém
           </Link>
         </div>
       </main>
@@ -74,7 +72,7 @@ export default function CenaFormPage() {
       const data = await res.json().catch(() => null);
 
       if (!res.ok || !data?.ok) {
-        setErr(data?.error ?? "Nepodařilo se odeslat formulář.");
+        setErr(data?.error ?? "Nepodařilo se odeslat formulář. Zkuste to prosím znovu.");
         return;
       }
 
@@ -87,247 +85,189 @@ export default function CenaFormPage() {
   }
 
   return (
-    <main className="mx-auto max-w-5xl px-6 py-12">
-      <Link href="/oprava/krok-2" className="text-sm text-slate-600 underline">
-        ← Zpět
-      </Link>
-
-      <div className="mt-8 grid gap-8 lg:grid-cols-5">
-        <section className="lg:col-span-3">
-          <div className="rounded-3xl border bg-white p-6 shadow-sm">
-            <h1 className="text-3xl font-bold tracking-tight">
-              Orientační cena opravy
-            </h1>
-
-            <p className="mt-3 text-slate-600">
-              Vybraný problém:{" "}
-              <span className="font-semibold text-slate-950">
-                {getProblemLabel(problem)}
-              </span>
-            </p>
-
-            <div className="mt-5 flex flex-wrap gap-3 text-sm text-slate-600">
-              <span>✔ Odpověď běžně do 24 hodin</span>
-              <span>✔ Nezávazně</span>
-              <span>✔ Bez platby předem</span>
+    <main className="min-h-screen bg-slate-50">
+      {/* Progress Bar */}
+      <div className="sticky top-0 z-40 border-b border-slate-200 bg-white">
+        <div className="mx-auto max-w-5xl px-6 py-4">
+          <div className="flex items-center justify-between text-sm">
+            <Link
+              href="/oprava/krok-2"
+              className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-900 transition-colors"
+            >
+              ← Zpět
+            </Link>
+            <div className="flex items-center gap-3">
+              <span className="font-medium text-emerald-600">Krok 3 z 4 – Orientační cena</span>
+              <div className="h-1.5 w-32 rounded bg-slate-200">
+                <div className="h-1.5 w-3/4 rounded bg-emerald-600"></div>
+              </div>
             </div>
+          </div>
+        </div>
+      </div>
 
-            <form onSubmit={onSubmit} className="mt-8 grid gap-4">
-              <div className="grid gap-4 sm:grid-cols-2">
-                <label className="grid gap-1">
-                  <span className="text-sm font-medium text-slate-700">
-                    Jméno / firma
+      <div className="mx-auto max-w-5xl px-6 py-12">
+        <div className="grid gap-10 lg:grid-cols-5">
+          {/* Formulář */}
+          <section className="lg:col-span-3">
+            <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+              <div className="mb-8">
+                <h1 className="text-4xl font-black tracking-tighter">Žádost o orientační cenu</h1>
+                <p className="mt-3 text-lg text-slate-600">
+                  Vybraný problém:{" "}
+                  <span className="font-semibold text-emerald-700">
+                    {getProblemLabel(problem)}
                   </span>
-                  <input
-                    name="name"
-                    required
-                    className={inputClass}
-                    placeholder="Např. Jakub Horák"
-                  />
-                </label>
-
-                <label className="grid gap-1">
-                  <span className="text-sm font-medium text-slate-700">
-                    E-mail
-                  </span>
-                  <input
-                    name="email"
-                    type="email"
-                    required
-                    className={inputClass}
-                    placeholder="např. ja@email.cz"
-                  />
-                </label>
-
-                <label className="grid gap-1">
-                  <span className="text-sm font-medium text-slate-700">
-                    Telefon
-                  </span>
-                  <input
-                    name="phone"
-                    required
-                    className={inputClass}
-                    placeholder="+420…"
-                  />
-                </label>
-
-                <label className="grid gap-1">
-                  <span className="text-sm font-medium text-slate-700">
-                    Značka notebooku *
-                  </span>
-                  <input
-                    name="brand"
-                    required
-                    className={inputClass}
-                    placeholder="Např. Lenovo, HP, Dell, Asus, Acer..."
-                  />
-                  <span className="text-xs text-slate-500">
-                    Apple zařízení neopravujeme.
-                  </span>
-                </label>
+                </p>
               </div>
 
-              <label className="grid gap-1">
-                <span className="text-sm font-medium text-slate-700">
-                  Popište problém co nejpřesněji
-                </span>
-                <textarea
-                  name="desc"
-                  required
-                  className={`${inputClass} min-h-[120px]`}
-                  placeholder="Co přesně se děje, kdy problém začal a jak se projevuje?"
-                />
-              </label>
+              <form onSubmit={onSubmit} className="space-y-6">
+                <div className="grid gap-5 sm:grid-cols-2">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                      Jméno / Firma
+                    </label>
+                    <input name="name" required className={inputClass} placeholder="Jan Novák" />
+                  </div>
 
-              <div className="grid gap-4 sm:grid-cols-2">
-  <label className="grid gap-1">
-    <span className="flex items-center gap-2 text-sm font-medium text-slate-700">
-      SN / Serial Number *
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                      E-mail
+                    </label>
+                    <input name="email" type="email" required className={inputClass} placeholder="vas@email.cz" />
+                  </div>
 
-      <span className="group relative cursor-help text-blue-700">
-        ⓘ
-        <span className="pointer-events-none absolute left-1/2 top-6 z-20 w-64 -translate-x-1/2 rounded-xl bg-slate-950 px-3 py-2 text-xs font-normal text-white opacity-0 shadow-lg transition group-hover:opacity-100">
-          SN najdete na štítku na spodní straně notebooku. Často bývá označené jako S/N, Serial Number nebo SN.
-        </span>
-      </span>
-    </span>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                      Telefon
+                    </label>
+                    <input name="phone" required className={inputClass} placeholder="+420 774 506 503" />
+                  </div>
 
-    <input
-      name="sn"
-      required
-      className={inputClass}
-      placeholder="např. S/N: PF123ABC"
-    />
-
-    <span className="text-xs text-slate-500">
-      Bez SN nedokážeme spolehlivě nacenit.
-    </span>
-  </label>
-
-  <label className="grid gap-1">
-    <span className="flex items-center gap-2 text-sm font-medium text-slate-700">
-      PN / model
-
-      <span className="group relative cursor-help text-blue-700">
-        ⓘ
-        <span className="pointer-events-none absolute left-1/2 top-6 z-20 w-64 -translate-x-1/2 rounded-xl bg-slate-950 px-3 py-2 text-xs font-normal text-white opacity-0 shadow-lg transition group-hover:opacity-100">
-          PN nebo model najdete většinou na stejném štítku na spodní straně notebooku. Může být označené jako P/N, Product Number, Model nebo Type.
-        </span>
-      </span>
-    </span>
-
-    <input
-      name="pn"
-      className={inputClass}
-      placeholder="např. P/N, model nebo type"
-    />
-
-    <span className="text-xs text-slate-500">
-      Volitelné, ale pomůže s přesnějším naceněním.
-    </span>
-  </label>
-</div>
-
-              <label className="grid gap-1">
-                <span className="text-sm font-medium text-slate-700">
-                  Příloha
-                </span>
-
-                <label
-                  onDragOver={(e) => e.preventDefault()}
-                  onDrop={(e) => {
-                    e.preventDefault();
-                    handleAttachment(e.dataTransfer.files?.[0]);
-                  }}
-                  className={`flex min-h-40 cursor-pointer flex-col items-center justify-center rounded-xl border px-4 py-4 text-center text-sm font-semibold transition ${
-                    attachmentName
-                      ? "border-green-500 bg-green-50 text-green-700"
-                      : "bg-white text-slate-700 hover:border-black hover:bg-slate-50"
-                  }`}
-                >
-                  {attachmentName ? (
-                    <>
-                      {attachmentPreview ? (
-                        <img
-                          src={attachmentPreview}
-                          alt="Náhled přílohy"
-                          className="mb-3 h-24 w-full rounded-lg object-cover"
-                        />
-                      ) : (
-                        <div className="mb-3 text-3xl">📄</div>
-                      )}
-
-                      <span className="break-all text-xs">{attachmentName}</span>
-
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          removeAttachment();
-                        }}
-                        className="mt-2 rounded-lg bg-black px-3 py-1 text-xs text-white"
-                      >
-                        Odebrat
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      📎 Přidat fotku nebo video
-                      <span className="mt-1 text-xs font-normal text-slate-500">
-                        Klikněte nebo přetáhněte soubor sem
-                      </span>
-                    </>
-                  )}
-
-                  <input
-                    name="attachment"
-                    type="file"
-                    className="hidden"
-                    accept="image/*,video/*,application/pdf"
-                    onChange={(e) => handleAttachment(e.target.files?.[0])}
-                  />
-                </label>
-
-                <span className="text-xs text-slate-500">
-                  Volitelné, ale doporučené hlavně u mechanického poškození, prasklin, pantů nebo polití.
-                </span>
-              </label>
-
-              <input name="problemKey" type="hidden" value={problem} />
-              <input
-                name="problemLabel"
-                type="hidden"
-                value={getProblemLabel(problem)}
-              />
-
-              {err && (
-                <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-red-800">
-                  {err}
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                      Značka notebooku
+                    </label>
+                    <input name="brand" required className={inputClass} placeholder="Lenovo, HP, Dell..." />
+                  </div>
                 </div>
-              )}
 
-              <button
-                type="submit"
-                disabled={loading}
-                className="mt-2 rounded-xl bg-black px-6 py-3 font-semibold text-white disabled:opacity-60"
-              >
-                {loading ? "Odesílám…" : "Odeslat poptávku ceny"}
-              </button>
-            </form>
-          </div>
-        </section>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                    Popis problému
+                  </label>
+                  <textarea
+                    name="desc"
+                    required
+                    rows={5}
+                    className={`${inputClass} resize-y min-h-[130px]`}
+                    placeholder="Popište co nejpřesněji, co se děje s notebookem..."
+                  />
+                </div>
 
-        <aside className="lg:col-span-2">
-          <div className="rounded-3xl border bg-slate-50 p-6">
-            <h2 className="font-semibold">Jak nacenění funguje</h2>
-            <div className="mt-6 space-y-3 text-sm text-slate-700">
-              <div>✔ Odpovíme obvykle do 24 hodin</div>
-              <div>✔ Neplatíte nic předem</div>
-              <div>✔ Pokud budete mít o opravu zájem, pošleme Vám instrukce k zaslání NTB</div>
-              <div>✔ V případě dotazu volejte 774 506 503</div>
+                <div className="grid gap-5 sm:grid-cols-2">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                      Serial Number (SN) *
+                    </label>
+                    <input name="sn" required className={inputClass} placeholder="PF123ABC456" />
+                    <p className="mt-1 text-xs text-slate-500">Najdete na spodní straně notebooku</p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                      Model / PN (volitelné)
+                    </label>
+                    <input name="pn" className={inputClass} placeholder="Např. ThinkPad T480" />
+                  </div>
+                </div>
+
+                {/* Příloha */}
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                    Příloha (fotky / video)
+                  </label>
+                  <label className={`flex min-h-[160px] cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed transition ${attachmentName ? "border-emerald-500 bg-emerald-50" : "border-slate-300 hover:border-slate-400"}`}>
+                    {attachmentName ? (
+                      <div className="text-center">
+                        {attachmentPreview && <img src={attachmentPreview} alt="preview" className="mx-auto mb-3 max-h-32 rounded-lg" />}
+                        <p className="font-medium text-emerald-700">{attachmentName}</p>
+                        <button
+                          type="button"
+                          onClick={(e) => { e.preventDefault(); removeAttachment(); }}
+                          className="mt-3 text-sm text-red-600 hover:text-red-700"
+                        >
+                          Odebrat soubor
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="text-center">
+                        <div className="text-4xl mb-2">📎</div>
+                        <p className="font-medium">Přidejte fotku nebo video</p>
+                        <p className="text-xs text-slate-500 mt-1">Klikněte nebo přetáhněte</p>
+                      </div>
+                    )}
+                    <input
+                      name="attachment"
+                      type="file"
+                      className="hidden"
+                      accept="image/*,video/*,application/pdf"
+                      onChange={(e) => handleAttachment(e.target.files?.[0])}
+                    />
+                  </label>
+                  <p className="mt-2 text-xs text-slate-500">
+                    Velmi pomůže u prasklého displeje, pantů, polití atd.
+                  </p>
+                </div>
+
+                <input name="problemKey" type="hidden" value={problem} />
+                <input name="problemLabel" type="hidden" value={getProblemLabel(problem)} />
+
+                {err && (
+                  <div className="rounded-2xl bg-red-50 border border-red-200 p-4 text-red-700">
+                    {err}
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full rounded-2xl bg-red-600 py-4 text-lg font-bold text-white hover:bg-red-700 disabled:opacity-70 transition"
+                >
+                  {loading ? "Odesílám poptávku..." : "Odeslat žádost o cenu"}
+                </button>
+              </form>
             </div>
-          </div>
-        </aside>
+          </section>
+
+          {/* Sidebar */}
+          <aside className="lg:col-span-2">
+            <div className="sticky top-24 rounded-3xl border border-slate-200 bg-white p-8">
+              <h3 className="font-bold text-xl">Jak to probíhá?</h3>
+              <div className="mt-6 space-y-5 text-sm">
+                <div className="flex gap-3">
+                  <div className="text-emerald-600">1.</div>
+                  <div>Odešlete formulář</div>
+                </div>
+                <div className="flex gap-3">
+                  <div className="text-emerald-600">2.</div>
+                  <div>Do 24 hodin vám pošleme orientační cenu</div>
+                </div>
+                <div className="flex gap-3">
+                  <div className="text-emerald-600">3.</div>
+                  <div>Pokud budete souhlasit, zašlete nám notebook</div>
+                </div>
+              </div>
+
+              <div className="mt-10 pt-6 border-t">
+                <p className="text-sm text-slate-600">Máte otázku?</p>
+                <a href="tel:+420774506503" className="mt-2 block text-2xl font-bold text-slate-900 hover:text-emerald-600">
+                  📞 774 506 503
+                </a>
+              </div>
+            </div>
+          </aside>
+        </div>
       </div>
     </main>
   );

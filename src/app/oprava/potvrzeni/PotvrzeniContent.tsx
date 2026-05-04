@@ -1,11 +1,12 @@
+// src/app/oprava/potvrzeni/PotvrzeniContent.tsx
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { useOrderStore, getProblemLabel } from "@/store/orderStore";
+import { useEffect, useRef } from "react";
 
-export default function PotvrzeniPage() {
+export default function PotvrzeniContent() {
   const params = useSearchParams();
   const typ = params.get("typ");
   const id = params.get("id");
@@ -15,6 +16,7 @@ export default function PotvrzeniPage() {
   const reset = useOrderStore((s) => s.reset);
   const problemRef = useRef(problem);
 
+  // Vyresetujeme store po zobrazení potvrzení
   useEffect(() => {
     reset();
   }, [reset]);
@@ -24,89 +26,105 @@ export default function PotvrzeniPage() {
     : "";
 
   return (
-    <main className="mx-auto max-w-4xl px-6 py-12">
-      <section className="rounded-3xl border bg-white p-8 text-center shadow-sm">
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-black text-3xl text-white">
-          ✓
+    <main className="min-h-screen bg-slate-50 py-12">
+      <div className="mx-auto max-w-4xl px-6">
+        <div className="rounded-3xl border border-slate-200 bg-white p-10 shadow-sm text-center">
+          {/* Ikona úspěchu */}
+          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100 text-5xl">
+            🎉
+          </div>
+
+          <h1 className="mt-8 text-4xl font-black tracking-tighter">
+            {isCena
+              ? "Poptávka ceny byla odeslána"
+              : "Objednávka byla úspěšně přijata"}
+          </h1>
+
+          {/* Číslo zakázky */}
+          {id && (
+            <div className="mx-auto mt-8 max-w-xs rounded-2xl border border-emerald-200 bg-emerald-50 p-6">
+              <div className="text-sm font-medium text-emerald-700">Číslo zakázky</div>
+              <div className="mt-2 text-4xl font-bold tracking-tighter text-emerald-900">
+                {id}
+              </div>
+              <p className="mt-3 text-xs text-emerald-600">
+                Uveďte prosím toto číslo na balík při odeslání notebooku.
+              </p>
+            </div>
+          )}
+
+          <p className="mx-auto mt-8 max-w-xl text-lg text-slate-600">
+            {isCena
+              ? "Děkujeme! Ozveme se vám s orientační cenou opravy obvykle do 24 hodin na e-mail nebo telefon."
+              : "Děkujeme! Co nejdříve vám pošleme e-mail s instrukcemi k zaslání notebooku a s cenou opravy."}
+          </p>
+
+          {problemLabel && (
+            <p className="mt-6 text-slate-600">
+              Nahlášený problém:{" "}
+              <span className="font-semibold text-slate-900">{problemLabel}</span>
+            </p>
+          )}
+
+          {/* Důvěra */}
+          <div className="mt-10 grid grid-cols-3 gap-4 text-sm">
+            <div className="rounded-2xl bg-slate-50 p-4">✔ Odpověď do 24 hodin</div>
+            <div className="rounded-2xl bg-slate-50 p-4">✔ Bez platby předem</div>
+            <div className="rounded-2xl bg-slate-50 p-4">✔ Oprava až po schválení</div>
+          </div>
         </div>
 
-        <h1 className="mt-6 text-3xl font-bold tracking-tight">
-          {isCena ? "Poptávka byla odeslána" : "Objednávka byla přijata"}
-        </h1>
-
-        {id && (
-          <div className="mx-auto mt-5 max-w-md rounded-2xl border bg-slate-50 p-4">
-            <div className="text-sm text-slate-600">Číslo zakázky</div>
-            <div className="mt-1 text-2xl font-bold tracking-tight">{id}</div>
-            <div className="mt-2 text-xs text-slate-500">
-              Uveďte prosím toto číslo na balík.
+        {/* Instrukce k odeslání (jen u objednávky) */}
+        {!isCena && (
+          <div className="mt-8 rounded-3xl border border-slate-200 bg-white p-8">
+            <h2 className="text-2xl font-bold">📦 Jak poslat notebook</h2>
+            <div className="mt-6 space-y-6">
+              <div className="rounded-2xl border bg-slate-50 p-6">
+                <ul className="space-y-3 text-sm text-slate-700">
+                  {id && (
+                    <li className="flex items-start gap-3">
+                      <span className="text-emerald-600">•</span>
+                      <span>Na balík napište číslo zakázky: <strong className="text-emerald-700">{id}</strong></span>
+                    </li>
+                  )}
+                  <li className="flex items-start gap-3">
+                    <span className="text-emerald-600">•</span>
+                    <span>Do balíku přiložte jméno a telefonní číslo</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-emerald-600">•</span>
+                    <span>Dobře zabalte notebook (bublinková fólie + pevná krabice)</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-emerald-600">•</span>
+                    <span>Přiložte nabíječku</span>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         )}
 
-        <p className="mx-auto mt-4 max-w-2xl text-slate-600">
-          {isCena
-            ? "Děkujeme. Ozveme se vám s orientační cenou opravy obvykle do 24 hodin."
-            : "Děkujeme. Co nejdříve vám pošleme instrukce k zaslání notebooku."}
-        </p>
+        {/* Akce */}
+        <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:justify-center">
+          <Link
+            href="/"
+            className="rounded-2xl bg-slate-900 px-8 py-4 font-semibold text-white hover:bg-slate-800 transition"
+          >
+            ← Zpět na hlavní stránku
+          </Link>
 
-        {problemLabel && (
-          <p className="mt-3 text-sm text-slate-600">
-            Nahlášený problém:{" "}
-            <span className="font-semibold text-slate-950">{problemLabel}</span>
-          </p>
-        )}
-
-        <div className="mt-8 grid gap-3 text-sm text-slate-700 sm:grid-cols-3">
-          <div className="rounded-2xl bg-slate-50 p-4">✔ Odpověď do 24 hodin</div>
-          <div className="rounded-2xl bg-slate-50 p-4">✔ Bez platby předem</div>
-          <div className="rounded-2xl bg-slate-50 p-4">✔ Oprava až po schválení</div>
+          <Link
+            href="/oprava/krok-1"
+            className="rounded-2xl border border-slate-300 px-8 py-4 font-semibold hover:bg-slate-50 transition"
+          >
+            Nová poptávka / objednávka
+          </Link>
         </div>
-      </section>
 
-      {!isCena && (
-        <section className="mt-8 rounded-3xl border bg-slate-50 p-6">
-          <h2 className="text-xl font-semibold">📦 Jak poslat notebook</h2>
-
-          <div className="mt-6 rounded-2xl border bg-white p-5">
-            <h3 className="font-semibold">ℹ️ Důležité před odesláním</h3>
-            <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-slate-700">
-              {id && (
-                <li>
-                  Na balík napište číslo zakázky: <strong>{id}</strong>.
-                </li>
-              )}
-              <li>Do balíku přiložte jméno a telefonní číslo.</li>
-              <li>Notebook dobře zabalte do bublinkové fólie.</li>
-              <li>Použijte pevnou krabici a zařízení zajistěte proti pohybu.</li>
-              <li>Pošlete prosím i nabíječku.</li>
-              <li>Po odeslání nám můžete poslat sledovací číslo.</li>
-            </ul>
-          </div>
-
-          <div className="mt-6 rounded-2xl border bg-white p-5 text-sm text-slate-700">
-            <strong>Důležité:</strong> Stav zařízení při převzetí bude porovnán
-            s uvedenými informacemi a případnými fotografiemi.
-            <br />
-            Doporučujeme si zařízení před odesláním nafotit pro vlastní jistotu.
-          </div>
-        </section>
-      )}
-
-      <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
-        <Link
-          href="/"
-          className="rounded-xl bg-black px-6 py-3 text-center font-semibold text-white hover:bg-black/90"
-        >
-          Zpět na hlavní stránku
-        </Link>
-
-        <Link
-          href="/oprava/krok-1"
-          className="rounded-xl border px-6 py-3 text-center font-semibold hover:bg-slate-50"
-        >
-          Nová poptávka
-        </Link>
+        <p className="mt-8 text-center text-sm text-slate-500">
+          Máte otázku? Zavolejte nám: <a href="tel:+420774506503" className="font-semibold text-emerald-600">774 506 503</a>
+        </p>
       </div>
     </main>
   );
