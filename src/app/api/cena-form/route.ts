@@ -17,57 +17,69 @@ export async function POST(req: Request) {
     const pn = String(formData.get("pn") || "").trim();
     const problemLabel = String(formData.get("problemLabel") || "");
 
+    // === VALIDACE ===
     if (!name || !email || !phone || !brand || !desc || !sn) {
-      return NextResponse.json({ ok: false, error: "Chybí povinné údaje." }, { status: 400 });
+      return NextResponse.json(
+        { ok: false, error: "Vyplňte prosím všechny povinné údaje." },
+        { status: 400 }
+      );
     }
 
-    // Interní email
-    const internalResult = await resend.emails.send({
+    // ==================== INTERNÍ EMAIL (pro tebe) ====================
+    await resend.emails.send({
       from: process.env.MAIL_FROM!,
       to: process.env.MAIL_TO!,
       replyTo: email,
       subject: `💰 Poptávka ceny – ${name}`,
       html: `
         <h2>Nová poptávka orientační ceny</h2>
+        <hr />
         <p><strong>Jméno:</strong> ${name}</p>
         <p><strong>Email:</strong> ${email}</p>
         <p><strong>Telefon:</strong> ${phone}</p>
         <p><strong>Značka:</strong> ${brand}</p>
         <p><strong>Problém:</strong> ${problemLabel}</p>
-        <p><strong>Popis:</strong> ${desc}</p>
+        <p><strong>Popis vady:</strong> ${desc}</p>
         <p><strong>SN:</strong> ${sn}</p>
-        <p><strong>PN:</strong> ${pn || "-"}</p>
+        <p><strong>PN / Model:</strong> ${pn || "-"}</p>
+        <hr />
+        <p><em>Zákazník očekává cenovou nabídku.</em></p>
       `,
     });
 
-    if (internalResult.error) {
-      console.error("Resend internal error:", internalResult.error);
-      return NextResponse.json({ ok: false, error: "Chyba při odesílání interního mailu." }, { status: 500 });
-    }
-
-    // Potvrzovací email zákazníkovi
-    const customerResult = await resend.emails.send({
+    // ==================== EMAIL ZÁKAZNÍKOVI ====================
+    await resend.emails.send({
       from: process.env.MAIL_FROM!,
       to: email,
       subject: "✅ Přijali jsme vaši poptávku ceny",
       html: `
         <h2>Děkujeme, ${name}!</h2>
-        <p>Vaše poptávka byla přijata. Ozveme se vám s cenou do 24 hodin.</p>
-        <p><strong>Problém:</strong> ${problemLabel}</p>
+        <p>Vaše poptávka orientační ceny byla úspěšně přijata.</p>
+        
+        <p>Ozveme se vám s cenovou nabídkou obvykle do 24 hodin.</p>
+        
+        <p><strong>Shrnutí vaší poptávky:</strong></p>
+        <p><strong>Značka:</strong> ${brand}<br />
+           <strong>Problém:</strong> ${problemLabel}</p>
+
+        <p>Pokud budeme potřebovat doplnit informace, ozveme se vám na tento email nebo telefon.</p>
+
         <hr />
-        <p>S pozdravem<br /><strong>HV Notebooky</strong></p>
+        <p>
+          S pozdravem<br />
+          <strong>HVservis</strong><br />
+          📞 <a href="tel:+420774506503">774 506 503</a>
+        </p>
       `,
     });
-
-    if (customerResult.error) {
-      console.error("Resend customer error:", customerResult.error);
-      return NextResponse.json({ ok: false, error: "Chyba při odesílání potvrzovacího mailu." }, { status: 500 });
-    }
 
     return NextResponse.json({ ok: true });
 
   } catch (error) {
-    console.error("API error:", error);
-    return NextResponse.json({ ok: false, error: "Nepodařilo se zpracovat požadavek." }, { status: 500 });
+    console.error("CENA-FORM API ERROR:", error);
+    return NextResponse.json(
+      { ok: false, error: "Nepodařilo se zpracovat poptávku." },
+      { status: 500 }
+    );
   }
 }
