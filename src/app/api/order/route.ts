@@ -116,20 +116,24 @@ export async function POST(req: Request) {
         </p>
 
         <ul>
-          <li>
-            <strong>Adresa:</strong><br />
-            HVservis<br />
-            Hybešova 11<br />
-            602 00 Brno
-          </li>
-          <br />
-          <li>
-            <strong>Zásilkovna / PPL (Candystore):</strong><br />
-            Candystore<br />
-            Hybešova 11<br />
-            602 00 Brno
-          </li>
-        </ul>
+  <li>
+    <strong>Adresa:</strong><br />
+    HVservis<br />
+    Hybešova 11<br />
+    602 00 Brno<br />
+    📞 +420 774 506 503<br />
+    ✉️ ntbservis@hvshop.cz
+  </li>
+  <br />
+  <li>
+    <strong>Zásilkovna / PPL (Candystore):</strong><br />
+    Candystore<br />
+    Hybešova 11<br />
+    602 00 Brno<br />
+    📞 +420 774 506 503<br />
+    ✉️ ntbservis@hvshop.cz
+  </li>
+</ul>
 
         <hr />
 

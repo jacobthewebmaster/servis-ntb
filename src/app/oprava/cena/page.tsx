@@ -180,35 +180,53 @@ export default function CenaFormPage() {
               </label>
 
               <div className="grid gap-4 sm:grid-cols-2">
-                <label className="grid gap-1">
-                  <span className="text-sm font-medium text-slate-700">
-                    SN / Serial Number *
-                  </span>
-                  <input
-                    name="sn"
-                    required
-                    className={inputClass}
-                    placeholder="např. S/N: …"
-                  />
-                  <span className="text-xs text-slate-500">
-                    Bez SN nedokážeme spolehlivě nacenit.
-                  </span>
-                </label>
+  <label className="grid gap-1">
+    <span className="flex items-center gap-2 text-sm font-medium text-slate-700">
+      SN / Serial Number *
 
-                <label className="grid gap-1">
-                  <span className="text-sm font-medium text-slate-700">
-                    PN / model
-                  </span>
-                  <input
-                    name="pn"
-                    className={inputClass}
-                    placeholder="např. P/N nebo model"
-                  />
-                  <span className="text-xs text-slate-500">
-                    Volitelné, ale pomůže s přesnějším naceněním.
-                  </span>
-                </label>
-              </div>
+      <span className="group relative cursor-help text-blue-700">
+        ⓘ
+        <span className="pointer-events-none absolute left-1/2 top-6 z-20 w-64 -translate-x-1/2 rounded-xl bg-slate-950 px-3 py-2 text-xs font-normal text-white opacity-0 shadow-lg transition group-hover:opacity-100">
+          SN najdete na štítku na spodní straně notebooku. Často bývá označené jako S/N, Serial Number nebo SN.
+        </span>
+      </span>
+    </span>
+
+    <input
+      name="sn"
+      required
+      className={inputClass}
+      placeholder="např. S/N: PF123ABC"
+    />
+
+    <span className="text-xs text-slate-500">
+      Bez SN nedokážeme spolehlivě nacenit.
+    </span>
+  </label>
+
+  <label className="grid gap-1">
+    <span className="flex items-center gap-2 text-sm font-medium text-slate-700">
+      PN / model
+
+      <span className="group relative cursor-help text-blue-700">
+        ⓘ
+        <span className="pointer-events-none absolute left-1/2 top-6 z-20 w-64 -translate-x-1/2 rounded-xl bg-slate-950 px-3 py-2 text-xs font-normal text-white opacity-0 shadow-lg transition group-hover:opacity-100">
+          PN nebo model najdete většinou na stejném štítku na spodní straně notebooku. Může být označené jako P/N, Product Number, Model nebo Type.
+        </span>
+      </span>
+    </span>
+
+    <input
+      name="pn"
+      className={inputClass}
+      placeholder="např. P/N, model nebo type"
+    />
+
+    <span className="text-xs text-slate-500">
+      Volitelné, ale pomůže s přesnějším naceněním.
+    </span>
+  </label>
+</div>
 
               <label className="grid gap-1">
                 <span className="text-sm font-medium text-slate-700">
