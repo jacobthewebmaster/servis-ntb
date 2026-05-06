@@ -1,5 +1,8 @@
 User-agent: *
 Allow: /
+Disallow: /api/
+
+Sitemap: https://hvnotebooky.cz/sitemap.xml
 
 User-agent: facebookexternalhit
 Allow: /
