@@ -43,27 +43,33 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen bg-white text-slate-950">
-      {/* HEADER */}
-      <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur-md">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-3">
-            <div className="flex overflow-hidden rounded-xl font-black text-2xl">
-              <span className="bg-blue-600 px-3 py-1 text-white">HV</span>
-              <span className="bg-emerald-600 px-3 py-1 text-white">NOTEBOOKY</span>
-            </div>
-            <span className="text-xl font-bold text-slate-700">.cz</span>
-          </div>
+{/* HEADER */}
+<header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur-md">
+  <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+    <div className="flex items-center gap-3">
+      <div className="flex overflow-hidden rounded-xl font-black text-2xl">
+        <span className="bg-blue-600 px-3 py-1 text-white">HV</span>
+        <span className="bg-emerald-600 px-3 py-1 text-white">NOTEBOOKY</span>
+      </div>
+      <span className="text-xl font-bold text-slate-700">.cz</span>
+    </div>
 
-          <div className="flex flex-col items-end">
-            <a href="tel:+420774506503" className="font-semibold text-lg hover:text-emerald-600 transition">
-              📞 774 506 503
-            </a>
-            <a href="mailto:ntbservis@hvshop.cz" className="text-sm text-slate-600 hover:text-emerald-600 transition">
-              ntbservis@hvshop.cz
-            </a>
-          </div>
-        </div>
-      </header>
+    <div className="flex flex-col items-end text-right">
+      <a 
+        href="tel:+420774506503" 
+        className="font-semibold text-base md:text-lg whitespace-nowrap hover:text-emerald-600 transition"
+      >
+        📞 774 506 503
+      </a>
+      <a 
+        href="mailto:ntbservis@hvshop.cz" 
+        className="text-xs md:text-sm text-slate-600 hover:text-emerald-600 transition"
+      >
+        ntbservis@hvshop.cz
+      </a>
+    </div>
+  </div>
+</header>
 
       {/* HERO */}
       <section className="mx-auto max-w-6xl px-6 pt-16 pb-20 text-center">
